@@ -1,0 +1,34 @@
+.vscode/settings.json
+  s_46c7d18984065e::t_2982eeb842beec 3-4,6
+AGENTS.md
+  s_46c7d18984065e::t_488f875829189d 8,16-17,19,24,35-39,48-49,54-55,68-70,94
+README.md
+  s_46c7d18984065e::t_02bb352c11eb1a 13,15-17,20-22,32,40-43,112-119
+instructions.md
+  s_46c7d18984065e::t_9ea1bab1da0b29 13-14,44,48-50
+sandbox/__init__.py
+  s_46c7d18984065e::t_8b07ae629abe46 3-4,11,14-17
+sandbox/setup.sh
+  s_46c7d18984065e::t_f33c18619485e7 22-26
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "599968b04cc026041b1a7ca3e7d4c0a802ed2122",
+  "prompts": {},
+  "humans": {
+    "h_0615fc48a2f10f": {
+      "author": "Avtar <118772076+avtarraikmo@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_46c7d18984065e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c78bb91a-f81e-4c63-968a-8ed9db40d6a4",
+        "model": "unknown"
+      },
+      "human_author": "Avtar <118772076+avtarraikmo@users.noreply.github.com>"
+    }
+  }
+}
