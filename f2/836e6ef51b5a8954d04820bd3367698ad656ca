@@ -1,0 +1,24 @@
+.vscode/settings.json
+  s_ac829159b97f02::t_c2e275a0b29c9f 1-12
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f2836e6ef51b5a8954d04820bd3367698ad656ca",
+  "prompts": {},
+  "humans": {
+    "h_0615fc48a2f10f": {
+      "author": "Avtar <118772076+avtarraikmo@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_ac829159b97f02": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38d06305-45d6-4113-acb4-21738b19b305",
+        "model": "unknown"
+      },
+      "human_author": "Avtar <118772076+avtarraikmo@users.noreply.github.com>"
+    }
+  }
+}
