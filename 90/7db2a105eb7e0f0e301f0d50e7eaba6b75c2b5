@@ -1,0 +1,38 @@
+.vscode/settings.json
+  s_dbb440c8b1bf96::t_606bfcfb6111fd 7-9
+AGENTS.md
+  s_dbb440c8b1bf96::t_2fc907270a4a65 84-85
+pyproject.toml
+  s_dbb440c8b1bf96::t_dd540ce10bc852 18-22
+tests/conftest.py
+  s_dbb440c8b1bf96::t_eddcd50fb9fad7 1-5
+tests/test_instructions.py
+  s_dbb440c8b1bf96::t_7e3028a1f5ca47 1-23
+tests/test_sandbox.py
+  s_dbb440c8b1bf96::t_5205ffdbfff0d0 1-58
+tests/test_tracing.py
+  s_dbb440c8b1bf96::t_e59ad502b96a5e 1-91
+uv.lock
+  s_dbb440c8b1bf96::t_26683121069ec4 75-79,90-92,347-355,594-602,1088-1096,1275-1299
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "907db2a105eb7e0f0e301f0d50e7eaba6b75c2b5",
+  "prompts": {},
+  "humans": {
+    "h_0615fc48a2f10f": {
+      "author": "Avtar <118772076+avtarraikmo@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_dbb440c8b1bf96": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "0c41ffc1-cee4-4966-bad2-5c9f27e7ca0c",
+        "model": "unknown"
+      },
+      "human_author": "Avtar <118772076+avtarraikmo@users.noreply.github.com>"
+    }
+  }
+}
