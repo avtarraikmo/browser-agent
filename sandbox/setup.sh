@@ -24,3 +24,13 @@ chmod -R a+rX "${PLAYWRIGHT_BROWSERS_PATH}"
 # looks in the default cache, not /opt. Link it there so launch works with no env var.
 mkdir -p /root/.cache
 ln -sfn "${PLAYWRIGHT_BROWSERS_PATH}" /root/.cache/ms-playwright
+
+# Install the browse.py CLI the agent calls via `execute`.
+# Assumes browse.py sits next to this script in sandbox/ (adjust if your build layout differs).
+mkdir -p /workspace
+cp "$(dirname "$0")/browse.py" /workspace/browse.py
+chmod a+rx /workspace/browse.py
+
+# Fail the bake now if the script or Playwright import is broken.
+python3 /workspace/browse.py --help >/dev/null
+
