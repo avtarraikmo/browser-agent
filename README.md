@@ -146,6 +146,15 @@ mda deploy --no-wait
 Deploy prints both the Agent Server URL to call and the LangSmith dashboard URL
 to inspect.
 
+To tag traces with the deployed commit and environment, set these in `.env` before
+running `mda deploy` (it forwards them like other `.env` values):
+
+- `LANGSMITH_REVISION_ID`: the output of `git rev-parse HEAD`, traced as `revision_id`.
+- `APP_ENV`: e.g. `dev` or `production`, traced as `environment`.
+
+With `APP_ENV` unset, as for `mda dev`, traces are labelled `environment=local`, so
+clear both values again before developing locally.
+
 ## Logs
 
 Read the deployed agent's server logs:

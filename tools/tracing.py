@@ -8,6 +8,7 @@ the trace would still record it, so it is scrubbed here, client-side, before upl
 
 from __future__ import annotations
 
+import os
 from typing import Any
 
 import langsmith as ls
@@ -40,3 +41,12 @@ def anonymize(data: Any) -> Any:
 def install() -> None:
     """Route all LangChain/LangGraph tracing in this process through a redacting client."""
     ls.configure(client=Client(anonymizer=anonymize))
+
+
+def run_metadata() -> dict[str, str]:
+    """Root-run metadata naming the environment (`APP_ENV`, else `local`) that produced a trace."""
+    # Passed to `define_deep_agent(metadata=...)`, not `ls.configure(metadata=...)`:
+    # the latter sets a context var that LangGraph server runs don't inherit.
+    # No `revision_id` here: the LangSmith client already copies
+    # LANGSMITH_REVISION_ID into every run's `revision_id` metadata.
+    return {"environment": os.environ.get("APP_ENV") or "local"}

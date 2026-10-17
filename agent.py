@@ -9,4 +9,5 @@ tracing.install()
 agent = define_deep_agent(
     name="browser-agent",
     model="openai:gpt-6-luna",
+    metadata=tracing.run_metadata(),
 )
