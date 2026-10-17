@@ -19,7 +19,7 @@ from playwright.sync_api import sync_playwright
 with sync_playwright() as p:
     browser = p.chromium.launch(headless=True)
     page = browser.new_page()
-    page.set_default_timeout(30_000)
+    page.set_default_timeout(120_000)
     page.goto("https://example.com", wait_until="domcontentloaded")
     print(page.title())
     print(page.inner_text("body")[:20_000])
