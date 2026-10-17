@@ -1,0 +1,24 @@
+env.example
+  s_00ec8fb9a9f19a::t_2fb903d0081cf2 1-30
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "53812222b184c4e2064895100d9abc8323eb181e",
+  "prompts": {},
+  "humans": {
+    "h_0615fc48a2f10f": {
+      "author": "Avtar <118772076+avtarraikmo@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_00ec8fb9a9f19a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "bf3f99c1-bc50-4551-89bd-cabef109adfd",
+        "model": "unknown"
+      },
+      "human_author": "Avtar <118772076+avtarraikmo@users.noreply.github.com>"
+    }
+  }
+}
