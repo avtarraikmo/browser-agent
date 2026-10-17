@@ -167,8 +167,8 @@ cython_debug/
 # Consolidated from former sub-project .gitignore files
 .env.*
 .mda/
-knowledge-bench/evals/harbor-env.sh
-knowledge-bench/evals/harbor-jobs/
+evals/harbor-env.sh
+evals/harbor-jobs/
 node_modules/
 
 # OS files

@@ -11,18 +11,46 @@ browser-agent/
   pyproject.toml       # project dependencies
   .env                 # API keys (LangSmith + model providers); never commit
   identity.py          # managed authentication
-  sandbox/__init__.py  # managed LangSmith sandbox (delete `sandbox/` to opt out)
-  tools/               # optional custom tools
+  sandbox/__init__.py  # managed LangSmith sandbox (not used by the browser tools)
+  tools/
+    __init__.py        # installs trace redaction on import
+    browser_tools.py   # Playwright tools with per-user browser contexts
+    tracing.py         # redacting LangSmith client
   middleware/          # optional middleware
   skills/              # optional skills synced to Context Hub
   tools/mcp.py         # optional MCP server declaration
+  AGENTS.md            # architecture and rules for coding agents
 ```
+
+See [AGENTS.md](AGENTS.md) for the architecture and the invariants to preserve.
 
 ## Install
 
 ```bash
 uv sync
+uv run playwright install chromium
 ```
+
+## How the browser works
+
+The agent browses with Playwright tools (`navigate`, `read_page`,
+`list_interactive_elements`, `click`, `ask_user`, `fill_with_user_input`) that run
+**inside the agent process**, not in the managed sandbox.
+
+- **Per-user contexts.** One shared headless Chromium; each authenticated user
+  gets an isolated `BrowserContext` (own cookies and logins) that persists across
+  threads. It is closed after 30 minutes idle (`IDLE_TTL_S`). Users are keyed by
+  the trusted `langgraph_auth_user` identity, falling back to the thread id, never
+  to a shared key.
+- **SSRF guard.** Only `http(s)` URLs whose host resolves to public IPs are
+  allowed, checked on every browser request including redirects and subresources.
+- **Credentials never reach the model.** `fill_with_user_input` pauses with
+  `interrupt()`, and the human's answer is typed straight into the page.
+- **Redacted traces.** `tools/tracing.py` scrubs `resume`/password/token-style
+  values and detected API keys from LangSmith traces before upload.
+
+State lives in one process, so a redeploy, restart or multiple replicas reset or
+split users' browser sessions.
 
 ## Evaluate
 
@@ -81,9 +109,10 @@ at `/memories/agent/`.
 
 ## Sandbox
 
-`sandbox/__init__.py` declares a managed LangSmith sandbox. MDA only enables the
-sandbox when this declaration is present — remove the `sandbox/` directory to
-opt out (for example for chat-only agents). Add `sandbox/setup.sh` if you want
+`sandbox/__init__.py` declares a managed LangSmith sandbox. The browser tools do
+not run in it, and the SDK reuses one sandbox per thread, not per user. MDA only
+enables the sandbox when this declaration is present — remove the `sandbox/`
+directory to opt out (for example for chat-only agents). Add `sandbox/setup.sh` if you want
 to provision a recipe snapshot; `mda deploy` / `mda dev` bake it once and new
 threads clone that image without re-running the script.
 

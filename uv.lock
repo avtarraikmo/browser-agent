@@ -2,8 +2,10 @@ version = 1
 revision = 3
 requires-python = ">=3.11"
 resolution-markers = [
-    "python_full_version >= '3.14'",
-    "python_full_version >= '3.12' and python_full_version < '3.14'",
+    "python_full_version >= '3.14' and sys_platform == 'emscripten'",
+    "python_full_version >= '3.12' and python_full_version < '3.14' and sys_platform == 'emscripten'",
+    "python_full_version >= '3.14' and sys_platform != 'emscripten'",
+    "python_full_version >= '3.12' and python_full_version < '3.14' and sys_platform != 'emscripten'",
     "python_full_version < '3.12'",
 ]
 
@@ -62,7 +64,10 @@ name = "browser-agent"
 version = "0.0.1"
 source = { virtual = "." }
 dependencies = [
+    { name = "langchain-core" },
     { name = "langchain-openai" },
+    { name = "langgraph" },
+    { name = "langsmith" },
     { name = "managed-deepagents" },
     { name = "playwright" },
     { name = "python-dotenv" },
@@ -70,8 +75,11 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
+    { name = "langchain-core", specifier = ">=1,<2" },
     { name = "langchain-openai", specifier = ">=1,<2" },
-    { name = "managed-deepagents", specifier = "==0.9.0" },
+    { name = "langgraph", specifier = ">=1,<2" },
+    { name = "langsmith", specifier = ">=0.14" },
+    { name = "managed-deepagents", specifier = "==0.9.3" },
     { name = "playwright", specifier = ">=1.64.0" },
     { name = "python-dotenv", specifier = ">=1.2.4" },
 ]
@@ -587,8 +595,8 @@ name = "httpcore2"
 version = "2.13.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "h11" },
-    { name = "truststore" },
+    { name = "h11", marker = "python_full_version < '3.12' or sys_platform != 'emscripten'" },
+    { name = "truststore", marker = "python_full_version < '3.12' or sys_platform != 'emscripten'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/cb/f3/1db7aa2bc2524062192bb0e0323969492d1883152a232fe36eea65f4e35c/httpcore2-2.13.1.tar.gz", hash = "sha256:e0aa977abe17e69a3b820a24542a6fa88702676d83880b8d194dcd18408e5103", size = 68071, upload-time = "2026-09-23T07:47:22.372Z" }
 wheels = [
@@ -956,7 +964,7 @@ wheels = [
 
 [[package]]
 name = "managed-deepagents"
-version = "0.9.0"
+version = "0.9.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "deepagents" },
@@ -964,17 +972,18 @@ dependencies = [
     { name = "langchain" },
     { name = "langchain-core" },
     { name = "langgraph" },
+    { name = "langgraph-prebuilt" },
     { name = "langgraph-sdk" },
     { name = "pydantic" },
     { name = "typing-extensions" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/d2/b7/c2ede55ea76b7cd5f003ffb916f5ac7d4717032e0d1fea9a117726aef32d/managed_deepagents-0.9.0-py3-none-macosx_10_12_x86_64.whl", hash = "sha256:2a76213fa2347af50c6a595b85fa0af8a02da90478a160438c49891403924f91", size = 2551229, upload-time = "2026-10-07T16:38:35.749Z" },
-    { url = "https://files.pythonhosted.org/packages/dc/a0/8e6c8b87dcd167d4ab1bca4fef1d9ea48d689b5a2e2c2a1fd80e32fa1ba4/managed_deepagents-0.9.0-py3-none-macosx_11_0_arm64.whl", hash = "sha256:9fb399d82e5f66170492a273cbdf785d9ef7fdf393aeb00b4128e319b351d95a", size = 2342903, upload-time = "2026-10-07T16:38:38.308Z" },
-    { url = "https://files.pythonhosted.org/packages/ba/d7/aa4d246ef5526dee36d7c6ca598491ee0984c56b2bef30f9b134e2ddff9c/managed_deepagents-0.9.0-py3-none-manylinux2014_aarch64.whl", hash = "sha256:0c8b56daf51e0939c6ce1bffecb22fdc2967130cdee5f2da9ba43e0c5fecb3b3", size = 2621209, upload-time = "2026-10-07T16:38:40.21Z" },
-    { url = "https://files.pythonhosted.org/packages/42/0d/2e8bbbe74994e2da3f1dac3bf9c4de81338828b71a1a22900288e3f9b91f/managed_deepagents-0.9.0-py3-none-manylinux2014_x86_64.whl", hash = "sha256:1464fbc47d17ce131e495e92aaab5148df62452040a8f29113484785e2a4b18f", size = 2868173, upload-time = "2026-10-07T16:38:42.004Z" },
-    { url = "https://files.pythonhosted.org/packages/10/16/531865302743e1efeaaa4cdd1f2f0e59c0e3598ab586f3bd2ae73cac5508/managed_deepagents-0.9.0-py3-none-win_amd64.whl", hash = "sha256:dfa1f5894de466c64efa38f120b2f6cc5777d7b31d75d692a92e01fb66cfc83d", size = 2328068, upload-time = "2026-10-07T16:38:44.025Z" },
-    { url = "https://files.pythonhosted.org/packages/9f/c2/c475c11ef65f1c81ef57b30b08920f46d7f894fc73df4abe8bf636fc9622/managed_deepagents-0.9.0-py3-none-win_arm64.whl", hash = "sha256:2aa596d631f7927cde6f78e4450c233e7cac7f808232866f849cf5833dc505c7", size = 2212825, upload-time = "2026-10-07T16:38:45.689Z" },
+    { url = "https://files.pythonhosted.org/packages/e2/93/67da5ce808aa35164ec2fabfcd3e650b543e85f81ff3e65849dc1e11ccbd/managed_deepagents-0.9.3-py3-none-macosx_10_12_x86_64.whl", hash = "sha256:bb9b6b1112d2cb3baadfc356581b1d65aa2cdb349c15eaf9a811fbea3bc62877", size = 2621609, upload-time = "2026-10-17T06:22:37.638Z" },
+    { url = "https://files.pythonhosted.org/packages/cd/21/60042f821996e0839c2e9cd41a50ea314bcbdf01a37d5cf504c73db277cb/managed_deepagents-0.9.3-py3-none-macosx_11_0_arm64.whl", hash = "sha256:c53c9ec0649ae7251f8a6a3ac7e9f9d50b24e256d55802f5744fcbae081b7e58", size = 2413581, upload-time = "2026-10-17T06:22:39.424Z" },
+    { url = "https://files.pythonhosted.org/packages/c1/7f/82726b43575a767cb4a9f315297dbec890a7b119169454a78a4c8880432d/managed_deepagents-0.9.3-py3-none-manylinux2014_aarch64.whl", hash = "sha256:e0f18194b66ab67f2d1fd0c7b71bf84037851e15672ee18c7df87b3bbd6cf10f", size = 2696557, upload-time = "2026-10-17T06:22:40.903Z" },
+    { url = "https://files.pythonhosted.org/packages/da/56/5ba74b49c340d6bd363ee2d1577e2c3afd31d2c96f2280eb2cd53e55a694/managed_deepagents-0.9.3-py3-none-manylinux2014_x86_64.whl", hash = "sha256:6597665ea4db9e9f4d24bbd4c33f41b0896fcf5d39479be8b7758758b280e79a", size = 2950415, upload-time = "2026-10-17T06:22:42.438Z" },
+    { url = "https://files.pythonhosted.org/packages/c7/4a/d6104f5780437781b7efd43ae2c17dbf61e19d5b67d675d04b0065eca3db/managed_deepagents-0.9.3-py3-none-win_amd64.whl", hash = "sha256:48aa2a709a07445669fab09c1ae853e91c7dba7c638d1dc35d1d99fcba5f143c", size = 2398194, upload-time = "2026-10-17T06:22:44.039Z" },
+    { url = "https://files.pythonhosted.org/packages/e9/0a/5383685163fa24a9ac1ea516e38bb2075df1d81d411014a66c97a258f872/managed_deepagents-0.9.3-py3-none-win_arm64.whl", hash = "sha256:6f5878fa64ae8b087599214bf7d0bbcb5dcac5cd79516b6dae0687196d50bed5", size = 2282086, upload-time = "2026-10-17T06:22:45.525Z" },
 ]
 
 [[package]]
@@ -1347,8 +1356,10 @@ name = "pyee"
 version = "14.0.0"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
-    "python_full_version >= '3.14'",
-    "python_full_version >= '3.12' and python_full_version < '3.14'",
+    "python_full_version >= '3.14' and sys_platform == 'emscripten'",
+    "python_full_version >= '3.12' and python_full_version < '3.14' and sys_platform == 'emscripten'",
+    "python_full_version >= '3.14' and sys_platform != 'emscripten'",
+    "python_full_version >= '3.12' and python_full_version < '3.14' and sys_platform != 'emscripten'",
 ]
 dependencies = [
     { name = "typing-extensions", marker = "python_full_version >= '3.12'" },

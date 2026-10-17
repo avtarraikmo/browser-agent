@@ -6,7 +6,7 @@
       "type": "node-terminal",
       "request": "launch",
       "command": "set -a; source .env; set +a; source .venv/bin/activate; mda dev",
-      "cwd": "${workspaceFolder}/browser-agent"
+      "cwd": "${workspaceFolder}"
     }
   ]
 }
