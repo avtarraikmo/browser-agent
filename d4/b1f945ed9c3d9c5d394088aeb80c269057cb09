@@ -1,0 +1,24 @@
+tools/browser_tools.py
+  s_00ec8fb9a9f19a::t_6f15465cfcd083 19-21,24,43-58,61,91-106,108,111-113,118-165,167,186,195-197,208,213-215,271,278-280,305,313-315,321,344-348,363-365,369,391-393,401
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d4b1f945ed9c3d9c5d394088aeb80c269057cb09",
+  "prompts": {},
+  "humans": {
+    "h_0615fc48a2f10f": {
+      "author": "Avtar <118772076+avtarraikmo@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_00ec8fb9a9f19a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "bf3f99c1-bc50-4551-89bd-cabef109adfd",
+        "model": "unknown"
+      },
+      "human_author": "Avtar <118772076+avtarraikmo@users.noreply.github.com>"
+    }
+  }
+}
