@@ -2,67 +2,11 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "MDA: dev (plain)",
+      "name": "MDA: dev",
       "type": "node-terminal",
       "request": "launch",
-      "command": "set -a; source .env; set +a; KB_MCP_VARIANT=plain uv run mda dev",
-      "cwd": "${workspaceFolder}/knowledge-bench"
-    },
-    {
-      "name": "MDA: dev (ontology)",
-      "type": "node-terminal",
-      "request": "launch",
-      "command": "set -a; source .env; set +a; KB_MCP_VARIANT=ontology uv run mda dev",
-      "cwd": "${workspaceFolder}/knowledge-bench"
-    },
-    {
-      "name": "Eval: LangSmith experiment (plain)",
-      "type": "debugpy",
-      "request": "launch",
-      "program": "${workspaceFolder}/eval_tools/run_experiment.py",
-      "args": ["--variant", "plain"],
-      "python": "${workspaceFolder}/.venv/bin/python",
-      "cwd": "${workspaceFolder}",
-      "console": "integratedTerminal",
-      "justMyCode": true
-    },
-    {
-      "name": "Eval: LangSmith experiment (ontology)",
-      "type": "debugpy",
-      "request": "launch",
-      "program": "${workspaceFolder}/eval_tools/run_experiment.py",
-      "args": ["--variant", "ontology"],
-      "python": "${workspaceFolder}/.venv/bin/python",
-      "cwd": "${workspaceFolder}",
-      "console": "integratedTerminal",
-      "justMyCode": true
-    },
-    {
-      "name": "pytest: MCP servers",
-      "type": "debugpy",
-      "request": "launch",
-      "module": "pytest",
-      "args": ["tests"],
-      "python": "${workspaceFolder}/.venv/bin/python",
-      "cwd": "${workspaceFolder}/knowledge-bench-mcp-servers",
-      "console": "integratedTerminal"
-    }
-  ],
-  "compounds": [
-    {
-      "name": "Plain: MCP server + MDA dev",
-      "configurations": ["MCP: plain server (8101)", "MDA: dev (plain)"],
-      "stopAll": true
-    },
-    {
-      "name": "Ontology: MCP server + MDA dev",
-      "configurations": ["MCP: ontology server (8102)", "MDA: dev (ontology)"],
-      "stopAll": true
-    },
-    {
-      "name": "Both MCP servers",
-      "configurations": ["MCP: plain server (8101)", "MCP: ontology server (8102)"],
-      "stopAll": true
+      "command": "set -a; source .env; set +a; source .venv/bin/activate; mda dev",
+      "cwd": "${workspaceFolder}/browser-agent"
     }
   ]
 }
