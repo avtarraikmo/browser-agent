@@ -5,114 +5,107 @@ Guidance for coding agents working on this repository. Read this before editing.
 ## What this is
 
 A Managed Deep Agent (`managed-deepagents==0.9.3`, LangGraph under the hood) that
-browses websites for users: it opens a page, summarizes it, and can log in with
-the human supplying credentials. The agent definition is `agent.py`; its system
-prompt is `instructions.md`; tools are in `tools/`.
+browses websites for users and can read their Gmail. The model drives headless
+Chromium inside the managed sandbox. The agent definition is `agent.py`; its system
+prompt is `instructions.md`.
 
 ## Layout
 
 | Path | Role |
 | --- | --- |
-| `agent.py` | `define_deep_agent(name=..., model=..., tools=browser_tools)`. `name` is the deploy id. |
-| `instructions.md` | Always-loaded system prompt: summarize flow, login flow, safety rules. |
+| `agent.py` | `define_deep_agent(name=..., model=..., tools=[connect_google])`; installs trace redaction. `name` is the deploy id. |
+| `instructions.md` | Always-loaded system prompt: browsing recipe, Gmail rules, safety rules. |
 | `identity.py` | Managed auth (`auth.langsmith_api_key()`); callers own their threads. |
-| `sandbox/__init__.py` | Managed LangSmith sandbox declaration. **Not used by the browser tools.** |
-| `tools/__init__.py` | Calls `tracing.install()` on import. Keep it. |
-| `tools/browser_tools.py` | Playwright tools, per-user browser sessions, SSRF guard, credential flow. |
-| `tools/tracing.py` | Redacting LangSmith client installed process-wide. |
+| `sandbox/__init__.py` | Managed sandbox: Gmail auth proxy rule, network deny list. |
+| `sandbox/setup.sh` | Bakes Playwright + Chromium into the sandbox snapshot. |
+| `tools/google.py` | `connect_google`: triggers the managed Google OAuth grant. |
+| `tools/tracing.py` | Redacting LangSmith client, installed by `agent.py`. |
 | `.mda/` | Generated build output (git-ignored). Never edit by hand. |
 | `.env` | Secrets (git-ignored). Never print, commit or log values. |
 
 ## Architecture
 
-### Request flow
+### Browsing
 
-`mda dev` / `mda deploy` compiles the project into `.mda/build` and serves it on
-a LangGraph server. A caller is authenticated by `identity.py`; the trusted user
-lands in the run config as `config["configurable"]["langgraph_auth_user"]`. The
-model calls tools from `browser_tools`; tools receive `config: RunnableConfig`
-(injected by LangChain, hidden from the model-facing schema).
+There are no custom browser tools and `playwright` is **not** a project dependency;
+the server image has no browser and `mda` can't customize it (`[tool.mda]` only
+supports `python-version`). The model runs Playwright scripts through deepagents'
+built-in `execute` tool in the sandbox, where `setup.sh` installed Playwright and
+Chromium. `mda deploy` / `mda dev` bake `setup.sh` once; threads clone the snapshot.
 
-### Browser sessions (`tools/browser_tools.py`)
+The SDK gives **one sandbox per thread** (`thread:<thread_id>`); `scope` and `name`
+are reserved. Browser state does not persist across threads. Custom tools get no
+handle to the sandbox, so don't add tools that expect one and don't use the private
+`runtime._resolve_managed_sandbox`.
 
-- One shared headless Chromium process (`_browser`, guarded by `_launch_lock`).
-- `_sessions: dict[str, _Session]`. Each `_Session` holds one `BrowserContext`,
-  the active `Page`, a per-user `asyncio.Lock`, and `last_used`.
-- `_user_key(config)` returns `user:<identity>`, else `thread:<thread_id>`. It
-  must never fall back to a constant, or users would share cookies and logins.
-- Every tool does `session = await _session(config)` then
-  `async with session.lock:`. `_session` also runs `_evict_idle()`, which closes
-  contexts idle past `IDLE_TTL_S` (1800 s) and skips sessions with a call in flight.
-- A browser relaunch resets every session's context/page (`_get_page`).
-- State is in-process: restarts and multiple replicas reset or split sessions.
+### Gmail / Google OAuth
 
-### Why not the managed sandbox
-
-The SDK reuses one sandbox per thread (`thread:<thread_id>`); `scope` and `name`
-are reserved and cannot be set. Custom tools get no handle to it (only
-deepagents' built-in `execute`/file tools do). Do not reach for the private
-`runtime._resolve_managed_sandbox`. Moving the browser into the sandbox was
-considered and rejected: it would lose per-user persistence and require rebuilding
-the guards below.
+- `connect_google` awaits `connections.get("google", {"type": "user"})`. With no
+  grant, MDA raises `CredentialAuthorizationRequiredError` and interrupts the user
+  to authorize. The tool returns only a confirmation.
+- `sandbox/__init__.py` declares a proxy rule for `gmail.googleapis.com` whose
+  `Authorization` header is `bearer(connections.get("google", {"type": "user"}))`.
+  The proxy injects the token per command, so it never enters the sandbox or the
+  model's context.
+- Only the Gmail API host is authenticated. `mail.google.com` is cookie-based and
+  is not. Keep the OAuth scope read-only (`gmail.readonly`).
+- The connection is created once with `mda connections create google --oauth google ...`
+  (see README). Don't commit client secrets.
 
 ### Security invariants (do not weaken)
 
-1. **SSRF guard.** `_is_public_url` allows only `http(s)` hosts whose resolved IPs
-   are all `ip.is_global`. It runs in `navigate` *and* on every request through
-   `_guard_route`, installed on each context with `context.route("**/*", ...)`.
-   Any new code path that creates a context or page must keep the route installed.
-2. **Credentials never reach the model.** Secrets are collected only by
-   `fill_with_user_input` via `interrupt()` and typed with `page.fill`. Its return
-   value must never include the value. Password fields force `secret=True`; secrets
-   are refused on non-HTTPS pages; the origin is pinned across the interrupt.
-   `ask_user` is for choices only. Never add a tool that returns field values.
-3. **Page content is untrusted.** Tool output derived from pages is wrapped in
-   `<untrusted_page_content>` and truncated. Keep the wrapping for new read tools.
-4. **Redacted traces.** The human's answer is traced as `Command(resume=...)`.
-   `tools/tracing.py` scrubs keys in `_SENSITIVE_KEYS` (`resume`, `password`,
-   `token`, ...) and applies `create_secret_anonymizer()`. Keep `tools/__init__.py`
-   importing `tracing`, and extend `_SENSITIVE_KEYS` if you add secret-bearing fields.
-5. **Side effects before `interrupt()` re-run on resume.** Keep code ahead of an
-   `interrupt()` call free of side effects (see `fill_with_user_input`).
+1. **Credentials never reach the model.** Tokens are injected by the sandbox proxy
+   and never returned by a tool. No tool may return a token, cookie or field value.
+   `instructions.md` forbids password logins to sites and asking for credentials.
+2. **Network deny list.** `proxy_config.access_control.deny_list` blocks loopback,
+   private, link-local (cloud metadata) and CGNAT ranges. The SDK documents it for
+   outbound HTTPS only; verify plain HTTP before relying on it. There is no
+   app-level URL check any more, so this list and the instructions are the guard.
+3. **Page and email content is untrusted.** `instructions.md` tells the model to
+   treat it as data. Keep that rule, and keep Gmail access read-only.
+4. **Redacted traces.** `tools/tracing.py` scrubs keys in `_SENSITIVE_KEYS`
+   (`resume`, `password`, `token`, ...) and applies `create_secret_anonymizer()`.
+   Keep `agent.py` calling `tracing.install()`, and extend `_SENSITIVE_KEYS` if you
+   add secret-bearing fields.
+5. **Least privilege on proxy rules.** Match specific hosts in `match_hosts`; never
+   attach the Google token to a wildcard or to hosts the user didn't ask about.
 
 ## Conventions
 
 - Python >= 3.11, async tools with `@tool`, type hints, `from __future__ import annotations`.
-- Match the existing style: short docstrings (they are the model-facing tool
-  descriptions, so write them for the model), terse comments explaining *why*.
-- Add new browser tools to the `browser_tools` list at the bottom of the module.
-- Use `uv` for dependencies (`uv add`, then commit `uv.lock`). Direct imports must
-  be declared in `pyproject.toml`.
+- Tool docstrings are model-facing descriptions; write them for the model.
+- Terse comments that explain *why*.
+- Use `uv` for dependencies (`uv add`, then commit `uv.lock`). Declare direct imports
+  in `pyproject.toml`.
 - Do not edit `.mda/`, and never commit `.env`.
 
 ## Commands
 
 ```bash
 uv sync
-uv run playwright install chromium   # once per machine
-mda dev                              # local LangGraph dev server
+mda dev                              # local LangGraph dev server (bakes sandbox/setup.sh)
 mda deploy                           # build to .mda/build and deploy to LangSmith
 mda logs                             # deployed server logs
+mda connections list                 # check the google connection exists
 mda evals init -i                    # Harbor eval workspace
 ```
 
 ## Verifying changes
 
-There is no test suite yet. For browser-tool changes, smoke-test with a script
-that calls the tools via `.ainvoke(args, config={"configurable": {...}})`, using
-two different `langgraph_auth_user` identities. Check that:
+There is no test suite yet. `uv run python -c "import agent, sandbox"` checks that
+the definitions load. Real checks need a deployment or `mda dev`:
 
-- `navigate` to `http://127.0.0.1` is refused;
-- a second identity does not see the first identity's open page;
-- Playwright, the browser and contexts are closed at the end of the script.
-
-For trace redaction, pass a `Command(resume="x")` payload through
-`client._hide_run_inputs(...)` and confirm `resume` is `[REDACTED]`.
+- Ask for a public page summary and confirm Chromium runs in the sandbox.
+- Ask for Gmail with no grant and confirm the OAuth interrupt appears; then confirm
+  mail is readable and no token appears in the transcript or trace.
+- Pass `Command(resume="x")` through `client._hide_run_inputs(...)` and confirm
+  `resume` is `[REDACTED]`.
 
 ## Known gaps
 
-- DNS rebinding: the SSRF check resolves DNS separately from Chromium's connect.
-  A network-level egress block would be stronger.
+- Untested end to end: `setup.sh` (assumes a Debian/Ubuntu sandbox image with root),
+  the Gmail proxy rule, and the deny list. Check them on the first `mda dev` run.
+- A page or email can try to steer the model; the guards are the instructions and
+  the deny list, not code.
 - The managed LangGraph server's own checkpoints may hold interrupt resume values;
   trace redaction does not cover them.
-- Eviction runs only on tool calls (no background reaper).

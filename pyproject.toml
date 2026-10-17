@@ -1,7 +1,7 @@
 [project]
 name = "browser-agent"
 version = "0.0.1"
-description = "A Managed Deep Agent that browses the web with per-user Playwright contexts and redacted traces."
+description = "A Managed Deep Agent that browses the web with Chromium in the managed sandbox, with redacted traces."
 requires-python = ">=3.11"
 dependencies = [
     # Imported directly by tools/ (also pulled in transitively by managed-deepagents).
@@ -10,7 +10,6 @@ dependencies = [
     "langgraph>=1,<2",
     "langsmith>=0.14",
     "managed-deepagents==0.9.3",
-    "playwright>=1.64.0",
     "python-dotenv>=1.2.4",
 ]
 
