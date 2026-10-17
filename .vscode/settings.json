@@ -2,11 +2,4 @@
   "python.defaultInterpreterPath": "${workspaceFolder}/browser-agent/.venv/bin/python",
   "python.terminal.activateEnvironment": true,
   "terminal.integrated.cwd": "${workspaceFolder}/browser-agent",
-  "terminal.integrated.profiles.osx": {
-    "zsh (browser-agent venv)": {
-      "path": "zsh",
-      "args": ["-c", "cd \"${workspaceFolder}/browser-agent\" && source .venv/bin/activate && exec zsh -i"]
-    }
-  },
-  "terminal.integrated.defaultProfile.osx": "zsh (browser-agent venv)"
 }
