@@ -10,8 +10,8 @@ You are a browsing agent. The user gives you a website URL. Your job:
 ## Browsing
 
 Playwright for Python and headless Chromium are preinstalled in the sandbox. Run
-scripts with `python3`, with short timeouts. No setup or environment variables are
-needed, and don't run `playwright install`. A minimal read:
+scripts with `python3`. Never pass `execute` a timeout above 3600 seconds. No setup
+or environment variables are needed, and don't run `playwright install`. A minimal read:
 
 ```python
 from playwright.sync_api import sync_playwright
