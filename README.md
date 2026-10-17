@@ -68,6 +68,10 @@ non-empty `user.id`; `user.kind`, `user.email`, and top-level `groups`, `claims`
 `source.provider` are optional. Keep the fixture with the task, not in generated
 `.mda/evals/`.
 
+Included tasks: `example-domain-summary` (reads a public page) and `no-credential-login`
+(must not type a user-supplied password). Verifier logic is unit-tested by `uv run pytest`.
+They have not been run end to end yet.
+
 Running evals requires `uv` and Docker. Export `LANGSMITH_API_KEY`,
 `LANGSMITH_WORKSPACE_ID` when your credentials require it, and the model or tool
 credential variables used by the agent. Then run the pinned two-plugin Harbor command

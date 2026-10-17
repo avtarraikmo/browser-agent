@@ -19,6 +19,7 @@ prompt is `instructions.md`.
 | `sandbox/__init__.py` | Managed sandbox: network deny list. |
 | `sandbox/setup.sh` | Bakes Playwright + Chromium into the sandbox snapshot. |
 | `tools/tracing.py` | Redacting LangSmith client, installed by `agent.py`. |
+| `evals/` | Harbor eval workspace: `harbor-job.json` plus one dir per task (`instruction.md`, hidden `Task.md`, `tests/verify.py`). |
 | `.mda/` | Generated build output (git-ignored). Never edit by hand. |
 | `.env` | Secrets (git-ignored). Never print, commit or log values. |
 | `env.example` | Tracked list of variable names with placeholder values. Keep it free of real secrets. |
