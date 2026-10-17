@@ -5,4 +5,6 @@ description = "A Managed Deep Agent project that uses a browser."
 requires-python = ">=3.11"
 dependencies = [
     "managed-deepagents==0.9.0",
+    "playwright>=1.64.0",
+    "python-dotenv>=1.2.4",
 ]

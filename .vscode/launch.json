@@ -2,30 +2,6 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "MCP: plain server (8101)",
-      "type": "debugpy",
-      "request": "launch",
-      "program": "${workspaceFolder}/knowledge-bench-mcp-servers/plain/server.py",
-      "python": "${workspaceFolder}/.venv/bin/python",
-      "cwd": "${workspaceFolder}/knowledge-bench-mcp-servers",
-      "envFile": "${workspaceFolder}/knowledge-bench/.env",
-      "env": { "KB_MCP_PORT": "8101" },
-      "console": "integratedTerminal",
-      "justMyCode": true
-    },
-    {
-      "name": "MCP: ontology server (8102)",
-      "type": "debugpy",
-      "request": "launch",
-      "program": "${workspaceFolder}/knowledge-bench-mcp-servers/ontology/server.py",
-      "python": "${workspaceFolder}/.venv/bin/python",
-      "cwd": "${workspaceFolder}/knowledge-bench-mcp-servers",
-      "envFile": "${workspaceFolder}/knowledge-bench/.env",
-      "env": { "KB_MCP_PORT": "8102" },
-      "console": "integratedTerminal",
-      "justMyCode": true
-    },
-    {
       "name": "MDA: dev (plain)",
       "type": "node-terminal",
       "request": "launch",
