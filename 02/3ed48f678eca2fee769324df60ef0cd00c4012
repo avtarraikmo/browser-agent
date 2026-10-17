@@ -1,0 +1,24 @@
+instructions.md
+  s_dbb440c8b1bf96::t_fe522e58f838bd 22
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "023ed48f678eca2fee769324df60ef0cd00c4012",
+  "prompts": {},
+  "humans": {
+    "h_0615fc48a2f10f": {
+      "author": "Avtar <118772076+avtarraikmo@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_dbb440c8b1bf96": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "0c41ffc1-cee4-4966-bad2-5c9f27e7ca0c",
+        "model": "unknown"
+      },
+      "human_author": "Avtar <118772076+avtarraikmo@users.noreply.github.com>"
+    }
+  }
+}
