@@ -1,0 +1,38 @@
+AGENTS.md
+  s_00ec8fb9a9f19a::t_f21889e6d56965 8-10,16-17,19-22,28-53,57-71,76-79,86,89,95-96,98-102,106-109
+README.md
+  s_00ec8fb9a9f19a::t_6fb4264985e2b5 14-15,17,35-47,51-70,129-130
+agent.py
+  s_00ec8fb9a9f19a::t_b0206006bc4dbe 3-4,6-9,13
+instructions.md
+  s_00ec8fb9a9f19a::t_a3a0bd1059a5bd 5-7,10-54,57-61,65,67-73
+pyproject.toml
+  s_00ec8fb9a9f19a::t_e836a7c21f74ae 4
+sandbox/__init__.py
+  s_00ec8fb9a9f19a::t_7e5978172221be 3-4,6-8,11-15,22-48
+sandbox/setup.sh
+  s_00ec8fb9a9f19a::t_07f4ecf3f5a162 1-21
+tools/google.py
+  s_00ec8fb9a9f19a::t_116fddb3a01d05 1-29
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "198c387f38f90fc0d098baa612a6b0c572e18849",
+  "prompts": {},
+  "humans": {
+    "h_0615fc48a2f10f": {
+      "author": "Avtar <118772076+avtarraikmo@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_00ec8fb9a9f19a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "bf3f99c1-bc50-4551-89bd-cabef109adfd",
+        "model": "unknown"
+      },
+      "human_author": "Avtar <118772076+avtarraikmo@users.noreply.github.com>"
+    }
+  }
+}
