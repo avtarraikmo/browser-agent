@@ -1,0 +1,36 @@
+agent.py
+  h_0615fc48a2f10f 1-9
+run.py
+  h_0615fc48a2f10f 1-28
+browser_tools.py
+  s_eaa55d3b631fa3::t_dd307a1fb2d05a 1-126
+identity.py
+  s_eaa55d3b631fa3::t_11823251ac65d7 1-5
+instructions.md
+  s_eaa55d3b631fa3::t_4baa2d02b622f7 1-18
+pyproject.toml
+  s_eaa55d3b631fa3::t_c903b5b30428e8 8-9
+uv.lock
+  s_eaa55d3b631fa3::t_f785e429ebca67 8-9,68-69,73-77,486-562,1100-1119,1298-1339
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "47aad36e5a1680e884efaa850975b73d45376ebd",
+  "prompts": {},
+  "humans": {
+    "h_0615fc48a2f10f": {
+      "author": "Avtar <118772076+avtarraikmo@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_eaa55d3b631fa3": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "17975c7e-2750-43c6-b56a-8622b4ffe870",
+        "model": "unknown"
+      },
+      "human_author": "Avtar <118772076+avtarraikmo@users.noreply.github.com>"
+    }
+  }
+}
