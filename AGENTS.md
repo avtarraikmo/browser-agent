@@ -81,7 +81,8 @@ mda evals init -i                    # Harbor eval workspace
 
 ## Verifying changes
 
-There is no test suite yet. `uv run python -c "import agent, sandbox"` checks that
+`uv run pytest` runs offline unit tests (trace redaction, sandbox deny list and
+timeouts, key rules in `instructions.md`). `uv run python -c "import agent, sandbox"` checks that
 the definitions load. Real checks need a deployment or `mda dev`:
 
 - Ask for a public page summary and confirm Chromium runs in the sandbox.
