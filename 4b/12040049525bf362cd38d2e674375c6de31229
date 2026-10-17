@@ -1,0 +1,58 @@
+browser-agent/agent.py
+  h_0615fc48a2f10f 1-9
+browser-agent/pyproject.toml
+  h_0615fc48a2f10f 1-14
+browser-agent/instructions.md
+  h_0615fc48a2f10f 1-48
+.vscode/launch.json
+  s_ac829159b97f02::t_a19740e49035a0 5,8-9
+browser-agent/.gitignore
+  s_eaa55d3b631fa3::t_434ee176c0b8b2 1-19
+browser-agent/README.md
+  s_eaa55d3b631fa3::t_3a72526f5126dd 1-150
+browser-agent/identity.py
+  s_eaa55d3b631fa3::t_28f65a87374a11 5-9
+browser-agent/sandbox/__init__.py
+  s_eaa55d3b631fa3::t_dda79c5f84556a 1-17
+browser-agent/tools/browser_tools.py
+  s_eaa55d3b631fa3::t_39cc34f6ce47f4 4-10,16,22-32,36,42,59,73-87,89,93,95-98,100-107,111-125,140-141,154-155,165,180-345
+browser-agent/uv.lock
+  s_d9cd1ede0bc207::t_4ca40867caf2cc 5-6,65,73,590-591,846-860,980-996,1350-1351,1425-1544,1590-1650
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "4b12040049525bf362cd38d2e674375c6de31229",
+  "prompts": {},
+  "humans": {
+    "h_0615fc48a2f10f": {
+      "author": "Avtar <118772076+avtarraikmo@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_ac829159b97f02": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "38d06305-45d6-4113-acb4-21738b19b305",
+        "model": "unknown"
+      },
+      "human_author": "Avtar <118772076+avtarraikmo@users.noreply.github.com>"
+    },
+    "s_d9cd1ede0bc207": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "b2b90193-54ee-4a31-85ce-99f14d4a5711",
+        "model": "unknown"
+      },
+      "human_author": "Avtar <118772076+avtarraikmo@users.noreply.github.com>"
+    },
+    "s_eaa55d3b631fa3": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "17975c7e-2750-43c6-b56a-8622b4ffe870",
+        "model": "unknown"
+      },
+      "human_author": "Avtar <118772076+avtarraikmo@users.noreply.github.com>"
+    }
+  }
+}
