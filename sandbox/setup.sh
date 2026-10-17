@@ -19,3 +19,8 @@ playwright install --with-deps chromium
 
 echo "export PLAYWRIGHT_BROWSERS_PATH=${PLAYWRIGHT_BROWSERS_PATH}" > /etc/profile.d/playwright.sh
 chmod -R a+rX "${PLAYWRIGHT_BROWSERS_PATH}"
+
+# `execute` shells are non-login, so profile.d is never sourced and Playwright
+# looks in the default cache, not /opt. Link it there so launch works with no env var.
+mkdir -p /root/.cache
+ln -sfn "${PLAYWRIGHT_BROWSERS_PATH}" /root/.cache/ms-playwright

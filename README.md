@@ -10,15 +10,16 @@ browser-agent/
   instructions.md      # always-loaded system prompt
   pyproject.toml       # project dependencies
   .env                 # API keys (LangSmith + model providers); never commit
+  env.example          # variable names to copy into .env
   identity.py          # managed authentication
-  sandbox/__init__.py  # managed sandbox: Gmail auth proxy rule + network deny list
-  sandbox/setup.sh     # bakes Playwright + Chromium into the sandbox snapshot
+  sandbox/
+    __init__.py        # managed sandbox: network deny list
+    setup.sh           # bakes Playwright + Chromium into the sandbox snapshot
   tools/
-    google.py          # connect_google: managed Google OAuth connection
     tracing.py         # redacting LangSmith client
-  middleware/          # optional middleware
-  skills/              # optional skills synced to Context Hub
-  tools/mcp.py         # optional MCP server declaration
+    mcp.py             # optional MCP server declaration (not present)
+  middleware/          # optional middleware (not present)
+  skills/              # optional skills synced to Context Hub (not present)
   AGENTS.md            # architecture and rules for coding agents
 ```
 
@@ -28,6 +29,7 @@ See [AGENTS.md](AGENTS.md) for the architecture and the invariants to preserve.
 
 ```bash
 uv sync
+cp env.example .env   # then fill in your keys
 ```
 
 ## How the browser works
@@ -35,8 +37,10 @@ uv sync
 There are no custom browser tools. The model browses by running Playwright
 scripts through the built-in `execute` tool inside the **managed sandbox**, where
 `sandbox/setup.sh` has installed Playwright and headless Chromium (baked once into
-the snapshot by `mda deploy` / `mda dev`). The server itself needs no browser, and
-`playwright` is not a project dependency.
+the snapshot by `mda deploy` / `mda dev`). The server itself has no browser and `mda`
+can't customize its image, so `playwright` is not a project dependency. Chromium lives
+in `/opt/playwright-browsers`, symlinked from Playwright's default cache path so
+scripts find it without any environment variable.
 
 - **One sandbox per thread.** MDA owns this and it can't be changed. Browser state
   does not persist across threads, and each script starts a fresh browser.
@@ -47,27 +51,6 @@ the snapshot by `mda deploy` / `mda dev`). The server itself needs no browser, a
   model never handles passwords or codes.
 - **Redacted traces.** `tools/tracing.py` scrubs `resume`/password/token-style
   values and detected API keys from LangSmith traces before upload.
-
-## Gmail (Google OAuth)
-
-`connect_google` connects the caller's Google account through MDA's managed OAuth.
-If the user hasn't connected yet, MDA pauses the run and asks them to authorize.
-The token stays in Agent Auth: a sandbox proxy rule adds it to requests to
-`gmail.googleapis.com`, so it never enters the sandbox, the model's context or
-traces. The agent reads mail through the Gmail API from the sandbox; the Gmail web
-UI (`mail.google.com`) is cookie-based and is not authenticated this way.
-
-One-time setup, in a Google Cloud OAuth client (Web application) whose redirect URI
-matches the one LangSmith shows for the connection:
-
-```bash
-mda connections create google --oauth google \
-  --client-id <CLIENT_ID> \
-  --scope openid --scope https://www.googleapis.com/auth/gmail.readonly
-```
-
-Add the client secret as `mda connections create --help` describes for BYOT OAuth.
-The agent only reads mail. Keep the scope read-only.
 
 ## Evaluate
 
@@ -126,11 +109,14 @@ at `/memories/agent/`.
 
 ## Sandbox
 
-`sandbox/__init__.py` declares a managed LangSmith sandbox (one per thread) where
-the browser runs. MDA only enables the sandbox when this declaration is present — remove the `sandbox/`
-directory to opt out (for example for chat-only agents). Add `sandbox/setup.sh` if you want
-to provision a recipe snapshot; `mda deploy` / `mda dev` bake it once and new
-threads clone that image without re-running the script.
+`sandbox/__init__.py` declares the managed LangSmith sandbox (one per thread) where
+the browser runs, with a network deny list. A new thread boots a fresh sandbox; it is stopped after 5
+idle minutes and deleted a minute later (there is no thread-end hook). MDA only
+enables the sandbox when this declaration is present; remove the `sandbox/`
+directory to opt out. `sandbox/setup.sh` provisions the recipe snapshot:
+`mda deploy` / `mda dev` bake it once and new threads clone that image without
+re-running the script. It assumes a Debian/Ubuntu image and root, and hasn't been
+verified end to end.
 
 ## Optional Runtime Pieces
 

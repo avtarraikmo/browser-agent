@@ -1,34 +1,23 @@
 """Managed LangSmith sandbox declaration.
 
-MDA owns the run-scoped name, reuse across turns (one sandbox per thread), and
-lifecycle. Delete this directory to run without a sandbox.
+MDA owns the run-scoped name and reuse across turns (one sandbox per thread). A new
+thread boots a fresh sandbox from the baked snapshot; idle TTLs below delete it. Delete this directory to run without a sandbox.
 
 `sandbox/setup.sh` installs Playwright and Chromium; `mda deploy` and `mda dev`
 bake it once and new threads clone the snapshot without re-running it. The agent
 browses by running Playwright scripts through the built-in `execute` tool.
 """
 
-from managed_deepagents import bearer, connections, define_sandbox
-
-# The caller's Google OAuth grant. Created once with:
-#   mda connections create google --oauth google --client-id <ID> --scopes <...>
-google = connections.get("google", {"type": "user"})
+from managed_deepagents import define_sandbox
 
 sandbox = define_sandbox(
-    # Reclaim idle sandboxes after 10 minutes.
-    idle_ttl_seconds=600,
+    # No thread-end hook exists, so TTLs reclaim the thread's sandbox: stopped after
+    # 5 idle minutes, then deleted a minute later (both must be multiples of 60).
+    idle_ttl_seconds=300,
+    delete_after_stop_seconds=60,
     # Default per-command timeout, in seconds.
     default_timeout=600,
     proxy_config={
-        # The sandbox proxy adds the user's token to Gmail API requests, so the
-        # token never enters the sandbox or the model's context.
-        "rules": [
-            {
-                "name": "google-gmail",
-                "match_hosts": ["gmail.googleapis.com"],
-                "headers": [{"name": "Authorization", "value": bearer(google)}],
-            }
-        ],
         # Network-level SSRF guard: the browser must not reach loopback, private
         # networks or cloud metadata endpoints.
         "access_control": {
