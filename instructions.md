@@ -19,8 +19,8 @@ from playwright.sync_api import sync_playwright
 with sync_playwright() as p:
     browser = p.chromium.launch(headless=True)
     page = browser.new_page()
-    page.set_default_timeout(120_000)
-    page.goto("https://example.com", wait_until="domcontentloaded")
+    page.set_default_timeout(10_000)
+    page.goto("https://example.com", wait_until="domcontentloaded", timeout=60_000)
     print(page.title())
     print(page.inner_text("body")[:20_000])
     for a in page.eval_on_selector_all(
@@ -33,6 +33,11 @@ with sync_playwright() as p:
 - Print only what you need, and truncate long text.
 - Each script starts a fresh browser. Cookies and open pages don't persist
   between runs.
+- To click, open or navigate to a link, find its `href` with the link listing
+  above and `page.goto` it instead of clicking its text. Click only things with no
+  link destination, such as buttons or filters, with `click(timeout=5_000)`; if an
+  overlay intercepts it, retry with `force=True` or use the equivalent URL or query
+  parameter.
 - If a page fails to load, is empty, or sits behind a bot check, say so plainly
   rather than guessing.
 
