@@ -26,10 +26,10 @@ mkdir -p /root/.cache
 ln -sfn "${PLAYWRIGHT_BROWSERS_PATH}" /root/.cache/ms-playwright
 
 # Install the browser_cli.py CLI the agent calls via `execute`.
-# Copies everything in sandbox/workspace/ (next to this script) into /workspace.
-mkdir -p /workspace
-cp -r "$(dirname "$0")/workspace/." /workspace/
-chmod a+rx /workspace/browser_cli.py
+# Copies everything in sandbox/agent_tools/ (next to this script) into /agent_tools.
+mkdir -p /agent_tools
+cp -r "$(dirname "$0")/agent_tools/." /agent_tools/
+chmod a+rx /agent_tools/browser_cli.py
 
 # Fail the bake now if the script or Playwright import is broken.
-python3 /workspace/browser_cli.py --help >/dev/null
+python3 /agent_tools/browser_cli.py --help >/dev/null

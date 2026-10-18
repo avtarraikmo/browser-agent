@@ -12,7 +12,7 @@ def test_execute_timeout_is_capped_at_3600():
 
 def test_cli_sets_playwright_default_timeout():
     # The model no longer writes Playwright scripts; the CLI owns the timeout.
-    cli = (Path(__file__).parent.parent / "sandbox" / "workspace" / "browser_cli.py").read_text()
+    cli = (Path(__file__).parent.parent / "sandbox" / "agent_tools" / "browser_cli.py").read_text()
     assert "page.set_default_timeout(20_000)" in cli
 
 
@@ -22,7 +22,7 @@ def test_login_rules():
 
 
 def test_uses_browser_cli():
-    assert "/workspace/browser_cli.py" in TEXT
+    assert "/agent_tools/browser_cli.py" in TEXT
     assert "browse.py" not in TEXT
 
 

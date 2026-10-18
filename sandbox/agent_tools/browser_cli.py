@@ -7,7 +7,7 @@ Cookies, tabs and page state persist; the profile dir survives Chrome restarts.
 
 Usage:  browser_cli.py goto URL | snap | text | click SEL | type SEL TEXT [--enter]
                 | press KEY | shot [PATH] | tabs | restart | stop
-Env:    BROWSE_PROFILE (default /workspace/.browse-profile), BROWSE_PORT (default 9222)
+Env:    BROWSE_PROFILE (default /agent_tools/.browse-profile), BROWSE_PORT (default 9222)
 Needs:  playwright + chromium already installed in the sandbox.
 """
 from __future__ import annotations
@@ -23,7 +23,7 @@ import urllib.request
 from playwright.sync_api import sync_playwright
 
 PORT = int(os.environ.get("BROWSE_PORT", "9222"))
-PROFILE = os.environ.get("BROWSE_PROFILE", "/workspace/.browse-profile")
+PROFILE = os.environ.get("BROWSE_PROFILE", "/agent_tools/.browse-profile")
 CDP = f"http://127.0.0.1:{PORT}"
 MAX_OUT = 6000  # chars returned to the agent per call
 
@@ -126,7 +126,7 @@ def main() -> None:
     s = sub.add_parser("click"); s.add_argument("selector")
     s = sub.add_parser("type"); s.add_argument("selector"); s.add_argument("text"); s.add_argument("--enter", action="store_true")
     s = sub.add_parser("press"); s.add_argument("key")
-    s = sub.add_parser("shot"); s.add_argument("path", nargs="?", default="/workspace/shot.png")
+    s = sub.add_parser("shot"); s.add_argument("path", nargs="?", default="/agent_tools/shot.png")
     a = ap.parse_args()
     try:
         print(run(a))

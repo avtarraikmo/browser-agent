@@ -15,8 +15,8 @@ browser-agent/
   sandbox/
     __init__.py        # managed sandbox: network deny list
     setup.sh           # bakes Playwright + Chromium into the sandbox snapshot
-    workspace/
-      browser_cli.py   # persistent browser CLI, copied to /workspace in the sandbox
+    agent_tools/
+      browser_cli.py   # persistent browser CLI, copied to /agent_tools in the sandbox
   tools/
     tracing.py         # redacting LangSmith client
     mcp.py             # optional MCP server declaration (not present)
@@ -41,7 +41,7 @@ flowchart LR
     User([User / caller]) -->|thread_id + message| Agent["Deep agent<br/>agent.py + instructions.md"]
     Agent -->|"execute tool<br/>thread:&lt;thread_id&gt;"| Sandbox
     subgraph Sandbox["Managed sandbox (one per thread, network deny list)"]
-        CLI["/workspace/browser_cli.py<br/>goto · snap · text · click · type · press · shot"]
+        CLI["/agent_tools/browser_cli.py<br/>goto · snap · text · click · type · press · shot"]
         PW[Playwright]
         Chrome[("Headless Chromium<br/>CDP :9222, persistent profile")]
         CLI -->|connect_over_cdp| PW --> Chrome

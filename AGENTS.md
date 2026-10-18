@@ -17,8 +17,8 @@ prompt is `instructions.md`.
 | `instructions.md` | Always-loaded system prompt: browsing recipe, safety rules. |
 | `identity.py` | Managed auth (`auth.langsmith_api_key()`); callers own their threads. |
 | `sandbox/__init__.py` | Managed sandbox: network deny list. |
-| `sandbox/setup.sh` | Bakes Playwright + Chromium into the sandbox snapshot and copies `sandbox/workspace/` to `/workspace`. |
-| `sandbox/workspace/browser_cli.py` | Persistent browser CLI the model calls via `execute`. |
+| `sandbox/setup.sh` | Bakes Playwright + Chromium into the sandbox snapshot and copies `sandbox/agent_tools/` to `/agent_tools`. |
+| `sandbox/agent_tools/browser_cli.py` | Persistent browser CLI the model calls via `execute`. |
 | `tools/tracing.py` | Redacting LangSmith client, installed by `agent.py`. |
 | `evals/` | Harbor eval workspace: `harbor-job.json` plus one dir per task (`instruction.md`, hidden `Task.md`, `tests/verify.py`). |
 | `.mda/` | Generated build output (git-ignored). Never edit by hand. |

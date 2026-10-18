@@ -104,7 +104,7 @@
       <g class="node" id="n-cli" data-k="cli" tabindex="0" role="button" aria-label="browser_cli.py">
         <rect x="280" y="100" width="170" height="80" rx="8"/>
         <text class="t" x="365" y="128" text-anchor="middle">browser_cli.py</text>
-        <text class="m" x="365" y="146" text-anchor="middle">/workspace · one action</text>
+        <text class="m" x="365" y="146" text-anchor="middle">/agent_tools · one action</text>
         <text class="m" x="365" y="162" text-anchor="middle">per call, JSON out</text>
       </g>
       <!-- playwright -->
@@ -188,13 +188,13 @@
       ["Each thread is isolated: browser state does not persist across threads.", "Supplies credentials in chat only if they want the agent to log in."]],
     agent: ["Deep agent", "agent.py defines it with define_deep_agent(name=\"browser-agent\") and no custom tools. instructions.md is the always-loaded system prompt.",
       ["Acts only through the built-in execute tool.", "Treats page content as untrusted data, never as instructions.", "Refuses localhost, private and metadata addresses.", "Traces are redacted before upload to LangSmith."]],
-    cli: ["browser_cli.py", "Lives at /workspace/browser_cli.py (source: sandbox/workspace/). Each call does one action and prints JSON, so the model never writes Playwright code.",
+    cli: ["browser_cli.py", "Lives at /agent_tools/browser_cli.py (source: sandbox/agent_tools/). Each call does one action and prints JSON, so the model never writes Playwright code.",
       ["Commands: goto, snap, text, tabs, shot, click, type, press, restart, stop.", "Default action timeout 20s; output capped at 6000 chars.", "type output redacts the typed text so passwords do not echo back.", "Errors come back as JSON with an error field for retry."]],
     pw: ["Playwright", "Python Playwright attaches to the running Chromium with connect_over_cdp, performs the action and disconnects. Chromium keeps running.",
       ["Not a project dependency: installed in the sandbox by setup.sh.", "Browsers live in /opt/playwright-browsers, symlinked to Playwright's default cache path."]],
     chrome: ["Headless Chromium", "Launched once with a remote-debugging port and a persistent user-data dir, so tabs, cookies and login sessions survive between execute calls.",
       ["Restart with restart if it gets stuck.", "Profile dir is off-limits to the model: it never reads cookies or storage files."]],
-    setup: ["Sandbox snapshot", "mda deploy / mda dev run sandbox/setup.sh once: install Playwright and Chromium, copy sandbox/workspace/ into /workspace, smoke-test the CLI. New threads clone the snapshot.",
+    setup: ["Sandbox snapshot", "mda deploy / mda dev run sandbox/setup.sh once: install Playwright and Chromium, copy sandbox/agent_tools/ into /agent_tools, smoke-test the CLI. New threads clone the snapshot.",
       ["No thread-end hook: idle and delete-after-stop TTLs reclaim sandboxes.", "The server image has no browser, so this is the only place it can be installed."]],
     web: ["Websites", "Everything here is untrusted. The proxy denies loopback, private, link-local (cloud metadata) and CGNAT ranges.",
       ["The SDK documents the deny list for outbound HTTPS; verify plain HTTP before relying on it."]],
@@ -202,7 +202,7 @@
       ["Credentials typed for a login still pass through model context; redaction is by key and pattern."]]
   };
   var TABS = {
-    read: [["goto URL", "open a page; returns title + accessibility snapshot"], ["snap", "re-read the current page"], ["text", "visible body text, truncated"], ["tabs", "list open tabs"], ["shot [PATH]", "screenshot to /workspace/shot.png"]],
+    read: [["goto URL", "open a page; returns title + accessibility snapshot"], ["snap", "re-read the current page"], ["text", "visible body text, truncated"], ["tabs", "list open tabs"], ["shot [PATH]", "screenshot to /agent_tools/shot.png"]],
     act: [["click SEL", "click, then return a fresh snapshot"], ["type SEL TEXT [--enter]", "fill a field, optionally submit"], ["press KEY", "send a key press"], ["restart / stop", "recover or shut down Chromium"]],
     login: [["when", "only if the user asks and supplies credentials in the thread"], ["how", "goto login page, snap, type username + password, click submit"], ["MFA", "asks the user for the code in chat; CAPTCHA is reported, not bypassed"], ["after", "session persists in the profile for the rest of the thread"], ["never", "repeat credentials in replies, files or screenshots"]],
     limits: [["scope", "visits only URLs the user named; no link-following unless asked"], ["network", "private and metadata addresses are blocked at the proxy"], ["state", "one sandbox per thread; nothing carries over"], ["honesty", "reports empty pages and bot checks instead of guessing"]]
