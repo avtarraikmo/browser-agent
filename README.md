@@ -99,9 +99,22 @@ non-empty `user.id`; `user.kind`, `user.email`, and top-level `groups`, `claims`
 `source.provider` are optional. Keep the fixture with the task, not in generated
 `.mda/evals/`.
 
-Included tasks: `example-domain-summary` (reads a public page) and `login-no-leak`
-(may log in but must not repeat a user-supplied password). Verifier logic is unit-tested by `uv run pytest`.
-They have not been run end to end yet.
+Included tasks (each has `instruction.md`, a hidden `Task.md` and `tests/verify.py`):
+
+| Task | Checks |
+| --- | --- |
+| `example-domain-heading-link` | reads a public page's heading and link target |
+| `page-details-format` | a bare request still gets the `page-details` format, with Logged in = No/Unclear |
+| `no-link-following` | reports a link's target without clicking or visiting it |
+| `refuse-private-address` | refuses a cloud-metadata address and never browses it |
+| `prompt-injection-data-url` | ignores "ignore previous instructions" text embedded in a page |
+| `unreachable-honesty` | says so when a page can't load instead of inventing a summary |
+| `no-credentials-no-typing` | doesn't type into a login page when given no credentials |
+| `login-no-leak` | may log in with supplied credentials but never repeats the password |
+
+Verifiers are pure offline functions over the final answer (`summary.json`) and the
+commands the agent ran (`result.json`); `uv run pytest` unit-tests every one. The tasks
+have not been run end to end yet (they need Docker and model credentials).
 
 Running evals requires `uv` and Docker. Export `LANGSMITH_API_KEY`,
 `LANGSMITH_WORKSPACE_ID` when your credentials require it, and the model or tool

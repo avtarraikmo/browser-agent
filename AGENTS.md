@@ -21,7 +21,7 @@ prompt is `instructions.md`.
 | `sandbox/setup.sh` | Bakes Playwright + Chromium into the sandbox snapshot and writes an embedded copy of `sandbox/agent_tools/browser_cli.py` to `/agent_tools` (`mda` uploads only this script, so siblings aren't available). |
 | `sandbox/agent_tools/browser_cli.py` | Persistent browser CLI the model calls via `execute`; source of truth for the copy embedded in `setup.sh` (deployed at `/agent_tools/browser_cli.py`). |
 | `tools/tracing.py` | Redacting LangSmith client, installed by `agent.py`. |
-| `evals/` | Harbor eval workspace: `harbor-job.json` plus one dir per task (`instruction.md`, hidden `Task.md`, `tests/verify.py`). |
+| `evals/` | Harbor eval workspace: `harbor-job.json` plus one dir per task (`instruction.md`, hidden `Task.md`, `tests/verify.py`). Eight tasks cover page facts (`example-domain-heading-link`), the `page-details` format, link following, private-address refusal, prompt injection, unreachable pages, login without credentials and password leakage (see the README table). Verifiers are pure offline functions over `summary.json` and the commands in `result.json`. |
 | `.mda/` | Generated build output (git-ignored). Never edit by hand. |
 | `.env` | Secrets (git-ignored). Never print, commit or log values. |
 | `env.example` | Tracked list of variable names with placeholder values. Keep it free of real secrets. |
@@ -75,15 +75,17 @@ the security invariants below.
 
 ## Conventions
 
-- Python >= 3.11, async tools with `@tool`, type hints, `from __future__ import annotations`.
-- Tool docstrings are model-facing descriptions; write them for the model.
+- Python >= 3.11, type hints, `from __future__ import annotations`. The agent has no custom
+  tools (it browses through `execute`); if you add any, use async `@tool` and write the
+  docstring for the model, since it is the model-facing description.
 - Terse comments that explain *why*.
 - Use `uv` for dependencies (`uv add`, then commit `uv.lock`). Declare direct imports
   in `pyproject.toml`.
 - Do not edit `.mda/`, and never commit `.env`. Never put real values in `env.example`.
-- After editing `browser_cli.py`, re-embed it between the `PYEOF` markers in `sandbox/setup.sh`; `tests/test_setup.py` fails on drift.
-- If you change what the agent can do, update `instructions.md`, `README.md` and this
-  file together.
+- After editing `browser_cli.py`, re-embed it between the `PYEOF` markers in
+  `sandbox/setup.sh`; `tests/test_setup.py` fails on drift.
+- If you change what the agent can do, update `instructions.md`, `skills/`, `README.md`,
+  `docs/architecture.html` and this file together.
 
 ## Commands
 
@@ -98,7 +100,8 @@ mda evals init -i                    # Harbor eval workspace
 ## Verifying changes
 
 `uv run pytest` runs offline unit tests (trace redaction, sandbox deny list and
-timeouts, key rules in `instructions.md`, the `page-details` skill, and that the CLI
+timeouts, key rules in `instructions.md`, the `page-details` skill, every eval task package and
+verifier, and that the CLI
 embedded in `setup.sh` matches `sandbox/agent_tools/browser_cli.py`). `uv run python -c "import agent, sandbox"` checks that
 the definitions load. Real checks need a deployment or `mda dev`:
 
@@ -109,6 +112,8 @@ the definitions load. Real checks need a deployment or `mda dev`:
 
 ## Known gaps
 
+- The eval tasks are unit-tested offline but have not been run through Harbor (needs
+  Docker and model credentials).
 - `setup.sh` bakes successfully on `mda dev` (it assumes a Debian/Ubuntu sandbox image
   with root) and the CLI works in a thread. The deny list is still untested end to end;
   check it, including plain HTTP, on a run.

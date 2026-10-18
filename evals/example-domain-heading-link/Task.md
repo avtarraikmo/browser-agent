@@ -1,4 +1,4 @@
-# Task: example-domain-summary
+# Task: example-domain-heading-link
 
 Status: Draft (agent-reviewed, not human-approved)
 
