@@ -15,7 +15,7 @@ prompt is `instructions.md`.
 | --- | --- |
 | `agent.py` | `define_deep_agent(name=..., model=...)` with no custom tools; installs trace redaction. `name` is the deploy id. |
 | `instructions.md` | Always-loaded system prompt: browsing recipe, safety rules. |
-| `skills/page-details/SKILL.md` | Read-only skill: reports the current page URL, login state, summary and available tabs/buttons. Uses only the read-only `page`/`snap`/`text`/`tabs` commands. |
+| `skills/page-details/SKILL.md` | Read-only skill: reports the current page URL, login state, a summary that answers the user's actual ask, and available tabs/buttons. Uses only the read-only `page`/`snap`/`text`/`tabs` commands. |
 | `identity.py` | Managed auth (`auth.langsmith_api_key()`); callers own their threads. |
 | `sandbox/__init__.py` | Managed sandbox: network deny list. |
 | `sandbox/setup.sh` | Bakes Playwright + Chromium into the sandbox snapshot and writes an embedded copy of `sandbox/agent_tools/browser_cli.py` to `/agent_tools` (`mda` uploads only this script, so siblings aren't available). |
@@ -51,8 +51,10 @@ handle to the sandbox, so don't add tools that expect one and don't use the priv
 
 `skills/<name>/SKILL.md` files are discovered automatically for static agents and
 synced to Context Hub on deploy; `agent.py` needs no wiring. `page-details` is read-only
-(read-only `page`/`snap`/`text`/`tabs`, no clicks or navigation) and `instructions.md` tells the model
-when to use it. Keep skills inside the security invariants below.
+(`page`/`snap`/`text`/`tabs`, no clicks or navigation) and `instructions.md` makes it
+mandatory for every page reply: its format is the standard answer, and its Summary
+answers what the user asked rather than giving a generic overview. Keep skills inside
+the security invariants below.
 
 ### Security invariants (do not weaken)
 
@@ -96,17 +98,22 @@ mda evals init -i                    # Harbor eval workspace
 ## Verifying changes
 
 `uv run pytest` runs offline unit tests (trace redaction, sandbox deny list and
-timeouts, key rules in `instructions.md`). `uv run python -c "import agent, sandbox"` checks that
+timeouts, key rules in `instructions.md`, the `page-details` skill, and that the CLI
+embedded in `setup.sh` matches `sandbox/agent_tools/browser_cli.py`). `uv run python -c "import agent, sandbox"` checks that
 the definitions load. Real checks need a deployment or `mda dev`:
 
-- Ask for a public page summary and confirm Chromium runs in the sandbox.
+- Ask for a public page summary and confirm Chromium runs in the sandbox and the reply
+  follows the `page-details` format (the model should `read_file` the skill first).
 - Pass `Command(resume="x")` through `client._hide_run_inputs(...)` and confirm
   `resume` is `[REDACTED]`.
 
 ## Known gaps
 
-- Untested end to end: `setup.sh` (assumes a Debian/Ubuntu sandbox image with root),
-  and the deny list. Check them on the first `mda dev` run.
+- `setup.sh` bakes successfully on `mda dev` (it assumes a Debian/Ubuntu sandbox image
+  with root) and the CLI works in a thread. The deny list is still untested end to end;
+  check it, including plain HTTP, on a run.
+- Skill use depends on `instructions.md` (the model reads `page-details` first); it is
+  not enforced in code.
 - A page or email can try to steer the model; the guards are the instructions and
   the deny list, not code.
 - The managed LangGraph server's own checkpoints may hold interrupt resume values;

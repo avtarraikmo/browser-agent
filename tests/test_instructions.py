@@ -32,8 +32,18 @@ def test_treats_page_content_as_untrusted():
 
 def test_points_to_page_details_skill():
     assert "`page-details` skill" in TEXT
+    assert "/skills/page-details/SKILL.md" in TEXT
 
 
 def test_prefers_single_call_reads():
     assert "goto URL --text" in TEXT
     assert "`page`" in TEXT
+
+
+def test_page_details_skill_is_mandatory_for_every_page():
+    assert re.search(r"mandatory for every page", TEXT, re.I)
+    assert re.search(r"Reply in the `page-details` skill's format", TEXT)
+
+
+def test_summary_must_answer_the_users_question():
+    assert re.search(r"summary\s+must answer what the user asked", TEXT)

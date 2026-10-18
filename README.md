@@ -22,7 +22,7 @@ browser-agent/
     mcp.py             # optional MCP server declaration (not present)
   middleware/          # optional middleware (not present)
   skills/
-    page-details/      # skill: current URL, login state, summary and available actions (read-only)
+    page-details/      # skill: URL, login state, summary answering the user's ask, available actions (read-only)
   AGENTS.md            # architecture and rules for coding agents
 ```
 
@@ -56,21 +56,24 @@ The agent runs `browser_cli.py` commands through `execute`; each command attache
 long-lived Chromium over CDP through Playwright, does one action and returns JSON. `execute` calls are capped at 120 seconds.
 
 The `page-details` skill (`skills/page-details/SKILL.md`) is discovered automatically and
-referenced from `instructions.md`. It reports the current URL, login state, a short summary
-and the tabs, buttons and forms available, using one read-only `page` call.
+referenced from `instructions.md`, which requires it for every page reply. It reports the
+current URL, login state, a summary that answers what the user asked (a general overview
+only when they gave no specific ask) and the tabs, buttons and forms available, using one
+read-only call.
 
 ## How the browser works
 
-There are no custom browser tools. The model browses by running Playwright
-scripts through the built-in `execute` tool inside the **managed sandbox**, where
+There are no custom browser tools. The model browses by running `browser_cli.py`
+commands through the built-in `execute` tool inside the **managed sandbox**, where
 `sandbox/setup.sh` has installed Playwright and headless Chromium (baked once into
 the snapshot by `mda deploy` / `mda dev`). The server itself has no browser and `mda`
 can't customize its image, so `playwright` is not a project dependency. Chromium lives
 in `/opt/playwright-browsers`, symlinked from Playwright's default cache path so
-scripts find it without any environment variable.
+the CLI finds it without any environment variable.
 
 - **One sandbox per thread.** MDA owns this and it can't be changed. Browser state
-  does not persist across threads, and each script starts a fresh browser.
+  does not persist across threads, but within a thread one Chromium stays alive between
+  commands, so tabs, cookies and logins carry over.
 - **Network deny list.** `sandbox/__init__.py` blocks loopback, private ranges,
   link-local and cloud metadata addresses at the sandbox proxy. The SDK documents
   this as covering outbound HTTPS; verify plain HTTP before relying on it.
@@ -147,8 +150,10 @@ idle minutes and deleted a minute later (there is no thread-end hook). MDA only
 enables the sandbox when this declaration is present; remove the `sandbox/`
 directory to opt out. `sandbox/setup.sh` provisions the recipe snapshot:
 `mda deploy` / `mda dev` bake it once and new threads clone that image without
-re-running the script. It assumes a Debian/Ubuntu image and root, and hasn't been
-verified end to end.
+re-running the script. It assumes a Debian/Ubuntu image and root (the bake has run
+successfully on `mda dev`). It also warms up Chromium once during the bake so the
+first-run profile setup is already in the snapshot. The default per-command timeout is
+120 seconds.
 
 ### Why `browser_cli.py` is embedded in `setup.sh`
 

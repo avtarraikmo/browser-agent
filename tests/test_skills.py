@@ -3,11 +3,11 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-SKILL = (Path(__file__).parent.parent / "skills" / "page-details" / "SKILL.md").read_text()
+SKILL = " ".join((Path(__file__).parent.parent / "skills" / "page-details" / "SKILL.md").read_text().split())
 
 
 def test_frontmatter_names_the_skill():
-    m = re.match(r"---\nname: page-details\ndescription: .+\n---\n", SKILL)
+    m = re.match(r"--- name: page-details description: .+? --- ", SKILL)
     assert m
 
 
@@ -27,3 +27,12 @@ def test_skill_treats_page_content_as_untrusted():
 
 def test_skill_reads_in_one_call():
     assert "browser_cli.py page" in SKILL
+
+
+def test_skill_applies_to_every_page_request():
+    assert "EVERY request that involves a web page" in SKILL
+
+
+def test_summary_answers_what_the_user_asked():
+    assert "answer what the user actually asked" in SKILL
+    assert "isn't on the page, say so plainly" in SKILL
