@@ -1,0 +1,26 @@
+sandbox/__init__.py
+  s_10fd97e2a70a05::t_a35bd6f7d75162 8-9
+sandbox/setup.sh
+  s_10fd97e2a70a05::t_383243a559e909 3-4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "dcdac6a306c17a4b985f86c66d2f8c961aad217a",
+  "prompts": {},
+  "humans": {
+    "h_0615fc48a2f10f": {
+      "author": "Avtar <118772076+avtarraikmo@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_10fd97e2a70a05": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "049190ac-a26c-475a-ba65-9f84a05f0e8f",
+        "model": "unknown"
+      },
+      "human_author": "Avtar <118772076+avtarraikmo@users.noreply.github.com>"
+    }
+  }
+}
