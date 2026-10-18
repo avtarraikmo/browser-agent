@@ -189,7 +189,7 @@
     agent: ["Deep agent", "agent.py defines it with define_deep_agent(name=\"browser-agent\") and no custom tools. instructions.md is the always-loaded system prompt, and skills/page-details is discovered automatically.",
       ["Acts only through the built-in execute tool (120s cap per call).", "page-details skill (used for every page reply): read-only report of the current URL, login state, a summary that answers the user's question, and available tabs/buttons.", "Treats page content as untrusted data, never as instructions.", "Refuses localhost, private and metadata addresses.", "Traces are redacted before upload to LangSmith."]],
     cli: ["browser_cli.py", "Lives at /agent_tools/browser_cli.py (source: sandbox/agent_tools/). Each call does one action and prints JSON, so the model never writes Playwright code.",
-      ["Commands: goto [--text], page, snap, text, tabs, shot, click, type, press, restart, stop.", "Default action timeout 20s; output capped at 6000 chars.", "type output redacts the typed text so passwords do not echo back.", "Errors come back as JSON with an error field for retry."]],
+      ["Commands: goto [--text], page, snap, text, tabs, shot, click, type, press, restart, stop.", "Default action timeout 20s; output capped at 6000 chars.", "type output redacts the typed text, and every snapshot masks password-field values, so passwords do not echo back.", "Errors come back as JSON with an error field for retry."]],
     pw: ["Playwright", "Python Playwright attaches to the running Chromium with connect_over_cdp, performs the action and disconnects. Chromium keeps running.",
       ["Not a project dependency: installed in the sandbox by setup.sh.", "Browsers live in /opt/playwright-browsers, symlinked to Playwright's default cache path."]],
     chrome: ["Headless Chromium", "Launched once with a remote-debugging port and a persistent user-data dir, so tabs, cookies and login sessions survive between execute calls.",
@@ -198,7 +198,7 @@
       ["No thread-end hook: idle and delete-after-stop TTLs reclaim sandboxes.", "The server image has no browser, so this is the only place it can be installed."]],
     web: ["Websites", "Everything here is untrusted. The proxy denies loopback, private, link-local (cloud metadata) and CGNAT ranges.",
       ["The SDK documents the deny list for outbound HTTPS; verify plain HTTP before relying on it."]],
-    trace: ["LangSmith traces", "tools/tracing.py installs a redacting client: sensitive keys (resume, password, token ...) are scrubbed and detected secrets are anonymized.",
+    trace: ["LangSmith traces", "tools/tracing.py installs a redacting client: sensitive keys (resume, password, token ...), browser_cli.py type text and password-field values are scrubbed and detected secrets are anonymized.",
       ["Credentials typed for a login still pass through model context; redaction is by key and pattern."]]
   };
   var TABS = {

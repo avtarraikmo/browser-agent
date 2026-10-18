@@ -78,8 +78,9 @@ the CLI finds it without any environment variable.
   link-local and cloud metadata addresses at the sandbox proxy. The SDK documents
   this as covering outbound HTTPS; verify plain HTTP before relying on it.
 - **Logins on request.** The agent signs in only with credentials the user gives it in
-  the thread, enters them through `browser_cli.py type` (which never echoes typed text),
-  and must not repeat them. They do pass through model context and the redacted traces.
+  the thread, enters them through `browser_cli.py type` (which never echoes typed text;
+  every snapshot also masks password-field values), and must not repeat them. They do
+  pass through model context; traces mask typed text and password-field values.
 - **Redacted traces.** `tools/tracing.py` scrubs `resume`/password/token-style
   values and detected API keys from LangSmith traces before upload.
 

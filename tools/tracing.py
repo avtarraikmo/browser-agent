@@ -8,6 +8,8 @@ the trace would still record it, so it is scrubbed here, client-side, before upl
 
 from __future__ import annotations
 
+import json
+import re
 from typing import Any
 
 import langsmith as ls
@@ -21,6 +23,28 @@ _SENSITIVE_KEYS = frozenset({"resume", "password", "passwd", "secret", "token", 
 
 _detect_secrets = create_secret_anonymizer()
 
+_SHELL_WORD = r"""(?:'[^']*'|"(?:\\.|[^"\\])*"|[^\s'"])+"""
+# `browser_cli.py type SEL TEXT`: TEXT is whatever the model typed, often a password.
+_TYPED_TEXT = re.compile(rf"(browser_cli\.py\s+type\s+(?:--enter\s+)?{_SHELL_WORD}\s+(?:--enter\s+)?){_SHELL_WORD}")
+# Snapshot lines end with the field's value; tool output carries them raw or JSON-escaped.
+_PASSWORD_TEXTBOX = re.compile(
+    r'(textbox +\\*"[^"\n]*?password[^"\n]*?\\*"(?: *\[[^\]\n]*\])*: ?).+?(?=\\n|\n|"[,}]|$)', re.IGNORECASE
+)
+
+
+def _scrub_text(text: str) -> str:
+    # Tool-call arguments arrive as JSON strings, where a regex can't tell where the command ends.
+    if text.lstrip().startswith(("{", "[")):
+        try:
+            parsed = json.loads(text)
+        except ValueError:
+            pass
+        else:
+            scrubbed = _scrub(parsed)
+            return json.dumps(scrubbed) if scrubbed != parsed else text
+    scrubbed = _PASSWORD_TEXTBOX.sub(rf"\g<1>{REDACTED}", _TYPED_TEXT.sub(rf"\g<1>{REDACTED}", text))
+    return scrubbed if scrubbed != text else text
+
 
 def _scrub(node: Any) -> Any:
     if isinstance(node, dict):
@@ -30,6 +54,8 @@ def _scrub(node: Any) -> Any:
         }
     if isinstance(node, list):
         return [_scrub(item) for item in node]
+    if isinstance(node, str):
+        return _scrub_text(node)
     return node
 
 

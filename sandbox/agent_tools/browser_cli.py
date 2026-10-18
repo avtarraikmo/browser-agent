@@ -15,6 +15,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import subprocess
 import sys
 import time
@@ -26,6 +27,9 @@ PORT = int(os.environ.get("BROWSE_PORT", "9222"))
 PROFILE = os.environ.get("BROWSE_PROFILE", "/agent_tools/.browse-profile")
 CDP = f"http://127.0.0.1:{PORT}"
 MAX_OUT = 6000  # chars returned to the agent per call
+REDACTED = "[REDACTED]"
+# aria snapshots print a textbox's current value after its name, password fields included.
+PASSWORD_TEXTBOX = re.compile(r'^(\s*- textbox "[^"\n]*password[^"\n]*"(?: *\[[^\]\n]*\])*: ?).+$', re.IGNORECASE | re.MULTILINE)
 
 
 # ------------------------------------------------------------------ chrome
@@ -71,9 +75,24 @@ def get_page(pw):
 
 
 # ---------------------------------------------------------------- commands
+def redact_passwords(page, tree: str) -> str:
+    """Mask password-field values in an aria snapshot."""
+    try:
+        values = page.eval_on_selector_all("input[type=password]", "els => els.map(e => e.value).filter(Boolean)")
+    except Exception:
+        values = []
+    for value in values:
+        if isinstance(value, str) and value:
+            tree = tree.replace(value, REDACTED).replace(json.dumps(value)[1:-1], REDACTED)
+    return PASSWORD_TEXTBOX.sub(rf"\g<1>{REDACTED}", tree)
+
+
+def aria(page) -> str:
+    return redact_passwords(page, page.locator("body").aria_snapshot())[:MAX_OUT]
+
+
 def snap(page) -> str:
-    tree = page.locator("body").aria_snapshot()
-    return json.dumps({"url": page.url, "title": page.title(), "snapshot": tree[:MAX_OUT]})
+    return json.dumps({"url": page.url, "title": page.title(), "snapshot": aria(page)})
 
 
 def page_info(page) -> str:
@@ -81,7 +100,7 @@ def page_info(page) -> str:
     return json.dumps({
         "url": page.url,
         "title": page.title(),
-        "snapshot": page.locator("body").aria_snapshot()[:MAX_OUT],
+        "snapshot": aria(page),
         "text": page.inner_text("body")[:MAX_OUT],
         "tabs": [{"url": pg.url, "title": pg.title()} for pg in page.context.pages],
     })
@@ -118,7 +137,7 @@ def run(a) -> str:
                 p.wait_for_load_state("domcontentloaded")
             # Never echo typed text back (it may be a password) into the model context.
             out = snap(p)
-            return out.replace(json.dumps(a.text)[1:-1], "[REDACTED]") if a.text else out
+            return out.replace(json.dumps(a.text)[1:-1], REDACTED) if a.text else out
         if a.cmd == "press":
             p.keyboard.press(a.key)
             return snap(p)

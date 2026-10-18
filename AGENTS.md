@@ -60,8 +60,10 @@ the security invariants below.
 
 1. **Credentials only on request, never repeated.** The model logs in only with
    credentials the user supplied in the thread; `instructions.md` forbids asking for
-   others, repeating them, or storing them, and `browser_cli.py type` redacts typed
-   text from its output. They do reach model context and traces (redacted by key).
+   others, repeating them, or storing them. `browser_cli.py type` redacts typed text
+   from its output, and every snapshot (`snap()`/`page_info()`) masks password-field
+   values, so later commands don't echo them. They still reach model context through
+   the user's message and the model's own `type` call.
 2. **Network deny list.** `proxy_config.access_control.deny_list` blocks loopback,
    private, link-local (cloud metadata) and CGNAT ranges. The SDK documents it for
    outbound HTTPS only; verify plain HTTP before relying on it. There is no
@@ -69,9 +71,10 @@ the security invariants below.
 3. **Page content is untrusted.** `instructions.md` tells the model to
    treat it as data. Keep that rule.
 4. **Redacted traces.** `tools/tracing.py` scrubs keys in `_SENSITIVE_KEYS`
-   (`resume`, `password`, `token`, ...) and applies `create_secret_anonymizer()`.
-   Keep `agent.py` calling `tracing.install()`, and extend `_SENSITIVE_KEYS` if you
-   add secret-bearing fields.
+   (`resume`, `password`, `token`, ...), masks the TEXT of `browser_cli.py type`
+   commands and password-textbox values in any string (including JSON-encoded tool-call
+   arguments), and applies `create_secret_anonymizer()`. Keep `agent.py` calling
+   `tracing.install()`, and extend `_SENSITIVE_KEYS` if you add secret-bearing fields.
 
 ## Conventions
 

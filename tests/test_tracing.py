@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import copy
+import json
 from unittest.mock import patch
 
 import pytest
@@ -89,3 +90,39 @@ def test_agent_module_installs_tracing():
 
     src = (pathlib.Path(__file__).parent.parent / "agent.py").read_text()
     assert "tracing.install()" in src
+
+
+FAKE_TYPED = "FAKE-trace-pass-5520"
+
+
+def test_anonymize_redacts_typed_text_in_execute_command():
+    cmd = f"python3 /agent_tools/browser_cli.py type 'input[type=\"password\"]' '{FAKE_TYPED}' --enter"
+    out = tracing.anonymize({"command": cmd, "timeout": 120})
+    assert out == {
+        "command": f"python3 /agent_tools/browser_cli.py type 'input[type=\"password\"]' {tracing.REDACTED} --enter",
+        "timeout": 120,
+    }
+
+
+def test_anonymize_redacts_typed_text_in_json_tool_call_arguments():
+    args = json.dumps({"command": f'python3 /agent_tools/browser_cli.py type "#pw" "{FAKE_TYPED}"', "timeout": 120})
+    out = tracing.anonymize({"arguments": args})
+    assert FAKE_TYPED not in str(out)
+    assert json.loads(out["arguments"]) == {
+        "command": f'python3 /agent_tools/browser_cli.py type "#pw" {tracing.REDACTED}',
+        "timeout": 120,
+    }
+
+
+def test_anonymize_preserves_other_browser_commands():
+    data = {"command": "python3 /agent_tools/browser_cli.py click 'text=Sign in'"}
+    assert tracing.anonymize(copy.deepcopy(data)) == data
+
+
+def test_anonymize_redacts_password_textbox_in_tool_output():
+    snapshot = f'- textbox "Email": demo-user\n- textbox "Password" [invalid]: {FAKE_TYPED}\n- button "Sign in"'
+    output = json.dumps({"url": "https://example.com/login", "snapshot": snapshot})
+    out = tracing.anonymize({"content": output + "\n\n[Command succeeded with exit code 0]"})
+    assert FAKE_TYPED not in str(out)
+    assert f'textbox \\"Password\\" [invalid]: {tracing.REDACTED}\\n- button' in out["content"]
+    assert "demo-user" in out["content"]
