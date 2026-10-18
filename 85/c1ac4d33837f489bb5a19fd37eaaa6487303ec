@@ -1,0 +1,104 @@
+AGENTS.md
+  s_10fd97e2a70a05::t_c3661da4db8ee1 24,78-80,85-88,103-104,115-116
+README.md
+  s_10fd97e2a70a05::t_da0c1764cbb0c5 102-117
+docs/architecture.html
+  s_10fd97e2a70a05::t_d1adfb2311faba 208
+evals/example-domain-heading-link/Task.md
+  s_10fd97e2a70a05::t_7e8729789a9d69 1
+evals/no-credentials-no-typing/Task.md
+  s_10fd97e2a70a05::t_a5412b6cc6080e 1-10
+evals/no-credentials-no-typing/environment/Dockerfile
+  s_10fd97e2a70a05::t_7e660ab2516baa 1-3
+evals/no-credentials-no-typing/instruction.md
+  s_10fd97e2a70a05::t_f460dea3118188 1
+evals/no-credentials-no-typing/task.toml
+  s_10fd97e2a70a05::t_01e171ca67de49 1-15
+evals/no-credentials-no-typing/tests/test.sh
+  s_10fd97e2a70a05::t_ca3fc57989e113 1-4
+evals/no-credentials-no-typing/tests/verify.py
+  s_10fd97e2a70a05::t_081109a5f6c082 1-52
+evals/no-link-following/Task.md
+  s_10fd97e2a70a05::t_138662b75fa1f1 1-10
+evals/no-link-following/environment/Dockerfile
+  s_10fd97e2a70a05::t_41b26a95e04fc5 1-3
+evals/no-link-following/instruction.md
+  s_10fd97e2a70a05::t_5c839ed7a95768 1
+evals/no-link-following/task.toml
+  s_10fd97e2a70a05::t_e501fad3a719e7 1-15
+evals/no-link-following/tests/test.sh
+  s_10fd97e2a70a05::t_50ba3e08ee82e5 1-4
+evals/no-link-following/tests/verify.py
+  s_10fd97e2a70a05::t_fa3dcf063c0625 1-59
+evals/page-details-format/Task.md
+  s_10fd97e2a70a05::t_57cb9aa5a8b7b8 1-10
+evals/page-details-format/environment/Dockerfile
+  s_10fd97e2a70a05::t_1195a47aa4d0c1 1-3
+evals/page-details-format/instruction.md
+  s_10fd97e2a70a05::t_41dac630a87cf7 1
+evals/page-details-format/task.toml
+  s_10fd97e2a70a05::t_da7f9399ed5a09 1-15
+evals/page-details-format/tests/test.sh
+  s_10fd97e2a70a05::t_94609e509474f7 1-4
+evals/page-details-format/tests/verify.py
+  s_10fd97e2a70a05::t_c2d0bdfc34daf3 1-55
+evals/prompt-injection-data-url/Task.md
+  s_10fd97e2a70a05::t_8b8ee48bb2de08 1-10
+evals/prompt-injection-data-url/environment/Dockerfile
+  s_10fd97e2a70a05::t_46bf17d504e010 1-3
+evals/prompt-injection-data-url/instruction.md
+  s_10fd97e2a70a05::t_cfbfc78a7610f2 1
+evals/prompt-injection-data-url/task.toml
+  s_10fd97e2a70a05::t_0ca920baabe939 1-15
+evals/prompt-injection-data-url/tests/test.sh
+  s_10fd97e2a70a05::t_b77a2405b79fb5 1-4
+evals/prompt-injection-data-url/tests/verify.py
+  s_10fd97e2a70a05::t_0eb7b42622ba33 1-50
+evals/refuse-private-address/Task.md
+  s_10fd97e2a70a05::t_6b0c1a89c41772 1-10
+evals/refuse-private-address/environment/Dockerfile
+  s_10fd97e2a70a05::t_52c9f682fa9d87 1-3
+evals/refuse-private-address/instruction.md
+  s_10fd97e2a70a05::t_68c455c3e25998 1
+evals/refuse-private-address/task.toml
+  s_10fd97e2a70a05::t_3031e095aca5a4 1-15
+evals/refuse-private-address/tests/test.sh
+  s_10fd97e2a70a05::t_f9fefeed239a44 1-4
+evals/refuse-private-address/tests/verify.py
+  s_10fd97e2a70a05::t_2b3d50aba00ef2 1-57
+evals/unreachable-honesty/Task.md
+  s_10fd97e2a70a05::t_c87991f9bde31e 1-10
+evals/unreachable-honesty/environment/Dockerfile
+  s_10fd97e2a70a05::t_ac4b8330baecf1 1-3
+evals/unreachable-honesty/instruction.md
+  s_10fd97e2a70a05::t_4361888f756a11 1
+evals/unreachable-honesty/task.toml
+  s_10fd97e2a70a05::t_4eb0b484cd358a 1-15
+evals/unreachable-honesty/tests/test.sh
+  s_10fd97e2a70a05::t_4c57aaae494b76 1-4
+evals/unreachable-honesty/tests/verify.py
+  s_10fd97e2a70a05::t_ddd430941e406b 1-56
+tests/test_evals.py
+  s_10fd97e2a70a05::t_d7a59c803851ff 9,20,26,42,56-119
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "85c1ac4d33837f489bb5a19fd37eaaa6487303ec",
+  "prompts": {},
+  "humans": {
+    "h_0615fc48a2f10f": {
+      "author": "Avtar <118772076+avtarraikmo@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_10fd97e2a70a05": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "049190ac-a26c-475a-ba65-9f84a05f0e8f",
+        "model": "unknown"
+      },
+      "human_author": "Avtar <118772076+avtarraikmo@users.noreply.github.com>"
+    }
+  }
+}
