@@ -1,0 +1,40 @@
+AGENTS.md
+  s_10fd97e2a70a05::t_53d51c760b375b 18,35-38,50-56
+README.md
+  s_10fd97e2a70a05::t_3298e2c03757e0 24-25,42,56-60
+docs/architecture.html
+  s_10fd97e2a70a05::t_6de833e7f6fbb6 189-190,205
+instructions.md
+  s_10fd97e2a70a05::t_0ed822647ca04d 15,41-47
+sandbox/__init__.py
+  s_10fd97e2a70a05::t_9bfb8504e79578 19
+skills/page-details/SKILL.md
+  s_10fd97e2a70a05::t_0eaf3155bb9653 1-55
+tests/test_instructions.py
+  s_10fd97e2a70a05::t_2e9f77d6758e89 9-10,31-34
+tests/test_sandbox.py
+  s_10fd97e2a70a05::t_bf21a112bea374 53
+tests/test_skills.py
+  s_10fd97e2a70a05::t_12dfd0071ca940 1-25
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "fdfc4519574f640f81b6d52f917317a9c1ef4386",
+  "prompts": {},
+  "humans": {
+    "h_0615fc48a2f10f": {
+      "author": "Avtar <118772076+avtarraikmo@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_10fd97e2a70a05": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "049190ac-a26c-475a-ba65-9f84a05f0e8f",
+        "model": "unknown"
+      },
+      "human_author": "Avtar <118772076+avtarraikmo@users.noreply.github.com>"
+    }
+  }
+}
