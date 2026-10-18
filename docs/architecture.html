@@ -194,7 +194,7 @@
       ["Not a project dependency: installed in the sandbox by setup.sh.", "Browsers live in /opt/playwright-browsers, symlinked to Playwright's default cache path."]],
     chrome: ["Headless Chromium", "Launched once with a remote-debugging port and a persistent user-data dir, so tabs, cookies and login sessions survive between execute calls.",
       ["Restart with restart if it gets stuck.", "Profile dir is off-limits to the model: it never reads cookies or storage files."]],
-    setup: ["Sandbox snapshot", "mda deploy / mda dev run sandbox/setup.sh once: install Playwright and Chromium, copy sandbox/agent_tools/ into /agent_tools, smoke-test the CLI. New threads clone the snapshot.",
+    setup: ["Sandbox snapshot", "mda deploy / mda dev run sandbox/setup.sh once: install Playwright and Chromium, write the embedded browser_cli.py to /agent_tools, smoke-test the CLI. New threads clone the snapshot.",
       ["No thread-end hook: idle and delete-after-stop TTLs reclaim sandboxes.", "The server image has no browser, so this is the only place it can be installed."]],
     web: ["Websites", "Everything here is untrusted. The proxy denies loopback, private, link-local (cloud metadata) and CGNAT ranges.",
       ["The SDK documents the deny list for outbound HTTPS; verify plain HTTP before relying on it."]],

@@ -17,8 +17,8 @@ prompt is `instructions.md`.
 | `instructions.md` | Always-loaded system prompt: browsing recipe, safety rules. |
 | `identity.py` | Managed auth (`auth.langsmith_api_key()`); callers own their threads. |
 | `sandbox/__init__.py` | Managed sandbox: network deny list. |
-| `sandbox/setup.sh` | Bakes Playwright + Chromium into the sandbox snapshot and copies `sandbox/agent_tools/` to `/agent_tools`. |
-| `sandbox/agent_tools/browser_cli.py` | Persistent browser CLI the model calls via `execute`. |
+| `sandbox/setup.sh` | Bakes Playwright + Chromium into the sandbox snapshot and writes an embedded copy of `sandbox/agent_tools/browser_cli.py` to `/agent_tools` (`mda` uploads only this script, so siblings aren't available). |
+| `sandbox/agent_tools/browser_cli.py` | Persistent browser CLI the model calls via `execute`; source of truth for the copy embedded in `setup.sh` (deployed at `/agent_tools/browser_cli.py`). |
 | `tools/tracing.py` | Redacting LangSmith client, installed by `agent.py`. |
 | `evals/` | Harbor eval workspace: `harbor-job.json` plus one dir per task (`instruction.md`, hidden `Task.md`, `tests/verify.py`). |
 | `.mda/` | Generated build output (git-ignored). Never edit by hand. |
@@ -70,6 +70,7 @@ handle to the sandbox, so don't add tools that expect one and don't use the priv
 - Use `uv` for dependencies (`uv add`, then commit `uv.lock`). Declare direct imports
   in `pyproject.toml`.
 - Do not edit `.mda/`, and never commit `.env`. Never put real values in `env.example`.
+- After editing `browser_cli.py`, re-embed it between the `PYEOF` markers in `sandbox/setup.sh`; `tests/test_setup.py` fails on drift.
 - If you change what the agent can do, update `instructions.md`, `README.md` and this
   file together.
 

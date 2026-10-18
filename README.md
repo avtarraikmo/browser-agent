@@ -16,7 +16,7 @@ browser-agent/
     __init__.py        # managed sandbox: network deny list
     setup.sh           # bakes Playwright + Chromium into the sandbox snapshot
     agent_tools/
-      browser_cli.py   # persistent browser CLI, copied to /agent_tools in the sandbox
+      browser_cli.py   # persistent browser CLI (source); embedded in setup.sh and written to /agent_tools in the sandbox
   tools/
     tracing.py         # redacting LangSmith client
     mcp.py             # optional MCP server declaration (not present)
@@ -144,6 +144,18 @@ directory to opt out. `sandbox/setup.sh` provisions the recipe snapshot:
 `mda deploy` / `mda dev` bake it once and new threads clone that image without
 re-running the script. It assumes a Debian/Ubuntu image and root, and hasn't been
 verified end to end.
+
+### Why `browser_cli.py` is embedded in `setup.sh`
+
+`mda` doesn't upload the `sandbox/` directory to the bake sandbox. It base64-encodes
+`setup.sh` alone and runs it as `/tmp/mda-setup.sh`, so sibling files don't exist
+there and a `cp` or `cat` from `sandbox/agent_tools/` fails (`cp: cannot stat
+'/tmp/agent_tools/.'`). `setup.sh` therefore writes the CLI to
+`/agent_tools/browser_cli.py` from a heredoc.
+
+`sandbox/agent_tools/browser_cli.py` is the source of truth. After editing it,
+paste the new contents between the `PYEOF` markers in `setup.sh`;
+`tests/test_setup.py` fails if the two copies differ.
 
 ## Optional Runtime Pieces
 
