@@ -25,12 +25,11 @@ chmod -R a+rX "${PLAYWRIGHT_BROWSERS_PATH}"
 mkdir -p /root/.cache
 ln -sfn "${PLAYWRIGHT_BROWSERS_PATH}" /root/.cache/ms-playwright
 
-# Install the browse.py CLI the agent calls via `execute`.
-# Assumes browse.py sits next to this script in sandbox/ (adjust if your build layout differs).
+# Install the browser_cli.py CLI the agent calls via `execute`.
+# Copies everything in sandbox/workspace/ (next to this script) into /workspace.
 mkdir -p /workspace
-cp "$(dirname "$0")/browse.py" /workspace/browse.py
-chmod a+rx /workspace/browse.py
+cp -r "$(dirname "$0")/workspace/." /workspace/
+chmod a+rx /workspace/browser_cli.py
 
 # Fail the bake now if the script or Playwright import is broken.
-python3 /workspace/browse.py --help >/dev/null
-
+python3 /workspace/browser_cli.py --help >/dev/null

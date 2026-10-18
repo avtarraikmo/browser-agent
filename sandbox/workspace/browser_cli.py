@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""browse.py - persistent browser CLI for agents. Runs INSIDE the sandbox.
+"""browser_cli.py - persistent browser CLI for agents. Runs INSIDE the sandbox.
 
 Chromium is launched once with a CDP port and stays alive between `execute` calls;
 each call attaches over CDP on localhost, does one action, and disconnects.
 Cookies, tabs and page state persist; the profile dir survives Chrome restarts.
 
-Usage:  browse.py goto URL | snap | text | click SEL | type SEL TEXT [--enter]
+Usage:  browser_cli.py goto URL | snap | text | click SEL | type SEL TEXT [--enter]
                 | press KEY | shot [PATH] | tabs | restart | stop
 Env:    BROWSE_PROFILE (default /workspace/.browse-profile), BROWSE_PORT (default 9222)
 Needs:  playwright + chromium already installed in the sandbox.
@@ -103,7 +103,9 @@ def run(a) -> str:
             if a.enter:
                 p.keyboard.press("Enter")
                 p.wait_for_load_state("domcontentloaded")
-            return snap(p)
+            # Never echo typed text back (it may be a password) into the model context.
+            out = snap(p)
+            return out.replace(json.dumps(a.text)[1:-1], "[REDACTED]") if a.text else out
         if a.cmd == "press":
             p.keyboard.press(a.key)
             return snap(p)

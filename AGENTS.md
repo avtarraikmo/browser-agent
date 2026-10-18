@@ -17,7 +17,8 @@ prompt is `instructions.md`.
 | `instructions.md` | Always-loaded system prompt: browsing recipe, safety rules. |
 | `identity.py` | Managed auth (`auth.langsmith_api_key()`); callers own their threads. |
 | `sandbox/__init__.py` | Managed sandbox: network deny list. |
-| `sandbox/setup.sh` | Bakes Playwright + Chromium into the sandbox snapshot. |
+| `sandbox/setup.sh` | Bakes Playwright + Chromium into the sandbox snapshot and copies `sandbox/workspace/` to `/workspace`. |
+| `sandbox/workspace/browser_cli.py` | Persistent browser CLI the model calls via `execute`. |
 | `tools/tracing.py` | Redacting LangSmith client, installed by `agent.py`. |
 | `evals/` | Harbor eval workspace: `harbor-job.json` plus one dir per task (`instruction.md`, hidden `Task.md`, `tests/verify.py`). |
 | `.mda/` | Generated build output (git-ignored). Never edit by hand. |
@@ -46,8 +47,10 @@ handle to the sandbox, so don't add tools that expect one and don't use the priv
 
 ### Security invariants (do not weaken)
 
-1. **Credentials never reach the model.** `instructions.md` forbids logging in to
-   sites and asking for credentials, so passwords and codes are never handled.
+1. **Credentials only on request, never repeated.** The model logs in only with
+   credentials the user supplied in the thread; `instructions.md` forbids asking for
+   others, repeating them, or storing them, and `browser_cli.py type` redacts typed
+   text from its output. They do reach model context and traces (redacted by key).
 2. **Network deny list.** `proxy_config.access_control.deny_list` blocks loopback,
    private, link-local (cloud metadata) and CGNAT ranges. The SDK documents it for
    outbound HTTPS only; verify plain HTTP before relying on it. There is no

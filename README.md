@@ -15,6 +15,8 @@ browser-agent/
   sandbox/
     __init__.py        # managed sandbox: network deny list
     setup.sh           # bakes Playwright + Chromium into the sandbox snapshot
+    workspace/
+      browser_cli.py   # persistent browser CLI, copied to /workspace in the sandbox
   tools/
     tracing.py         # redacting LangSmith client
     mcp.py             # optional MCP server declaration (not present)
@@ -32,6 +34,26 @@ uv sync
 cp env.example .env   # then fill in your keys
 ```
 
+## Architecture
+
+```mermaid
+flowchart LR
+    User([User / caller]) -->|thread_id + message| Agent["Deep agent<br/>agent.py + instructions.md"]
+    Agent -->|"execute tool<br/>thread:&lt;thread_id&gt;"| Sandbox
+    subgraph Sandbox["Managed sandbox (one per thread, network deny list)"]
+        CLI["/workspace/browser_cli.py<br/>goto · snap · text · click · type · press · shot"]
+        PW[Playwright]
+        Chrome[("Headless Chromium<br/>CDP :9222, persistent profile")]
+        CLI -->|connect_over_cdp| PW --> Chrome
+    end
+    Chrome -->|HTTPS via proxy| Web[(Websites)]
+    Agent -.->|redacted traces| LS[LangSmith]
+```
+
+Each thread gets its own sandbox cloned from the snapshot baked by `sandbox/setup.sh`.
+The agent runs `browser_cli.py` commands through `execute`; each command attaches to the
+long-lived Chromium over CDP through Playwright, does one action and returns JSON.
+
 ## How the browser works
 
 There are no custom browser tools. The model browses by running Playwright
@@ -47,8 +69,9 @@ scripts find it without any environment variable.
 - **Network deny list.** `sandbox/__init__.py` blocks loopback, private ranges,
   link-local and cloud metadata addresses at the sandbox proxy. The SDK documents
   this as covering outbound HTTPS; verify plain HTTP before relying on it.
-- **No password logins.** `instructions.md` forbids logging in to sites, so the
-  model never handles passwords or codes.
+- **Logins on request.** The agent signs in only with credentials the user gives it in
+  the thread, enters them through `browser_cli.py type` (which never echoes typed text),
+  and must not repeat them. They do pass through model context and the redacted traces.
 - **Redacted traces.** `tools/tracing.py` scrubs `resume`/password/token-style
   values and detected API keys from LangSmith traces before upload.
 
@@ -68,8 +91,8 @@ non-empty `user.id`; `user.kind`, `user.email`, and top-level `groups`, `claims`
 `source.provider` are optional. Keep the fixture with the task, not in generated
 `.mda/evals/`.
 
-Included tasks: `example-domain-summary` (reads a public page) and `no-credential-login`
-(must not type a user-supplied password). Verifier logic is unit-tested by `uv run pytest`.
+Included tasks: `example-domain-summary` (reads a public page) and `login-no-leak`
+(may log in but must not repeat a user-supplied password). Verifier logic is unit-tested by `uv run pytest`.
 They have not been run end to end yet.
 
 Running evals requires `uv` and Docker. Export `LANGSMITH_API_KEY`,
