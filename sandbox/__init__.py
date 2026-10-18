@@ -5,7 +5,8 @@ thread boots a fresh sandbox from the baked snapshot; idle TTLs below delete it.
 
 `sandbox/setup.sh` installs Playwright and Chromium; `mda deploy` and `mda dev`
 bake it once and new threads clone the snapshot without re-running it. The agent
-browses by running Playwright scripts through the built-in `execute` tool.
+browses by running the `browser_cli.py` commands that setup.sh installs, through the
+built-in `execute` tool.
 """
 
 from managed_deepagents import define_sandbox

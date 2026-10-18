@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Baked once by `mda deploy` / `mda dev`; new threads clone the resulting snapshot.
-# Installs Playwright and Chromium (with its system libraries) for browsing from
-# the sandbox's `execute` tool.
+# Installs Playwright and Chromium (with its system libraries) and the browser_cli.py
+# CLI for browsing from the sandbox's `execute` tool, then warms up Chromium once.
 set -euo pipefail
 
 export DEBIAN_FRONTEND=noninteractive
