@@ -50,7 +50,7 @@ def test_public_address_is_not_denied(addr):
 
 
 def test_default_timeout_within_cap():
-    assert 0 < OPTIONS["default_timeout"] <= 3600
+    assert 0 < OPTIONS["default_timeout"] <= 120
 
 
 @pytest.mark.parametrize("key", ["idle_ttl_seconds", "delete_after_stop_seconds"])

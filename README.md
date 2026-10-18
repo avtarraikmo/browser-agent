@@ -21,7 +21,8 @@ browser-agent/
     tracing.py         # redacting LangSmith client
     mcp.py             # optional MCP server declaration (not present)
   middleware/          # optional middleware (not present)
-  skills/              # optional skills synced to Context Hub (not present)
+  skills/
+    page-details/      # skill: current URL, login state, summary and available actions (read-only)
   AGENTS.md            # architecture and rules for coding agents
 ```
 
@@ -38,7 +39,7 @@ cp env.example .env   # then fill in your keys
 
 ```mermaid
 flowchart LR
-    User([User / caller]) -->|thread_id + message| Agent["Deep agent<br/>agent.py + instructions.md"]
+    User([User / caller]) -->|thread_id + message| Agent["Deep agent<br/>agent.py + instructions.md<br/>skills/page-details"]
     Agent -->|"execute tool<br/>thread:&lt;thread_id&gt;"| Sandbox
     subgraph Sandbox["Managed sandbox (one per thread, network deny list)"]
         CLI["/agent_tools/browser_cli.py<br/>goto · snap · text · click · type · press · shot"]
@@ -52,7 +53,11 @@ flowchart LR
 
 Each thread gets its own sandbox cloned from the snapshot baked by `sandbox/setup.sh`.
 The agent runs `browser_cli.py` commands through `execute`; each command attaches to the
-long-lived Chromium over CDP through Playwright, does one action and returns JSON.
+long-lived Chromium over CDP through Playwright, does one action and returns JSON. `execute` calls are capped at 120 seconds.
+
+The `page-details` skill (`skills/page-details/SKILL.md`) is discovered automatically and
+referenced from `instructions.md`. It reports the current URL, login state, a short summary
+and the tabs, buttons and forms available, using only `snap`, `text` and `tabs`.
 
 ## How the browser works
 

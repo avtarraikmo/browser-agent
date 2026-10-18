@@ -15,6 +15,7 @@ prompt is `instructions.md`.
 | --- | --- |
 | `agent.py` | `define_deep_agent(name=..., model=...)` with no custom tools; installs trace redaction. `name` is the deploy id. |
 | `instructions.md` | Always-loaded system prompt: browsing recipe, safety rules. |
+| `skills/page-details/SKILL.md` | Read-only skill: reports the current page URL, login state, summary and available tabs/buttons. Uses only `snap`/`text`/`tabs`. |
 | `identity.py` | Managed auth (`auth.langsmith_api_key()`); callers own their threads. |
 | `sandbox/__init__.py` | Managed sandbox: network deny list. |
 | `sandbox/setup.sh` | Bakes Playwright + Chromium into the sandbox snapshot and writes an embedded copy of `sandbox/agent_tools/browser_cli.py` to `/agent_tools` (`mda` uploads only this script, so siblings aren't available). |
@@ -31,9 +32,10 @@ prompt is `instructions.md`.
 
 There are no custom browser tools and `playwright` is **not** a project dependency;
 the server image has no browser and `mda` can't customize it (`[tool.mda]` only
-supports `python-version`). The model runs Playwright scripts through deepagents'
-built-in `execute` tool in the sandbox, where `setup.sh` installed Playwright and
-Chromium. `mda deploy` / `mda dev` bake `setup.sh` once; threads clone the snapshot.
+supports `python-version`). The model runs `/agent_tools/browser_cli.py` commands through
+deepagents' built-in `execute` tool (capped at 120s) in the sandbox, where `setup.sh`
+installed Playwright and Chromium and wrote the CLI. `mda` uploads only `setup.sh` to
+the bake sandbox, so the CLI is embedded in it (see the README). `mda deploy` / `mda dev` bake `setup.sh` once; threads clone the snapshot.
 Chromium is in `/opt/playwright-browsers`, symlinked from `/root/.cache/ms-playwright`
 by `setup.sh`: `execute` shells are non-login, so no env var is set and Playwright only
 finds browsers at its default path. Don't rely on the model exporting
@@ -44,6 +46,13 @@ The SDK gives **one sandbox per thread** (`thread:<thread_id>`); `scope` and `na
 are reserved. Browser state does not persist across threads. Custom tools get no
 handle to the sandbox, so don't add tools that expect one and don't use the private
 `runtime._resolve_managed_sandbox`.
+
+### Skills
+
+`skills/<name>/SKILL.md` files are discovered automatically for static agents and
+synced to Context Hub on deploy; `agent.py` needs no wiring. `page-details` is read-only
+(`snap`/`text`/`tabs` only, no clicks or navigation) and `instructions.md` tells the model
+when to use it. Keep skills inside the security invariants below.
 
 ### Security invariants (do not weaken)
 

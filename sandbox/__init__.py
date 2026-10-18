@@ -16,7 +16,7 @@ sandbox = define_sandbox(
     idle_ttl_seconds=300,
     delete_after_stop_seconds=60,
     # Default per-command timeout, in seconds.
-    default_timeout=600,
+    default_timeout=120,
     proxy_config={
         # Network-level SSRF guard: the browser must not reach loopback, private
         # networks or cloud metadata endpoints.

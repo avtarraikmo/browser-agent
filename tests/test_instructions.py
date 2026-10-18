@@ -6,8 +6,8 @@ from pathlib import Path
 TEXT = (Path(__file__).parent.parent / "instructions.md").read_text()
 
 
-def test_execute_timeout_is_capped_at_3600():
-    assert re.search(r"never pass .?execute.? a timeout above 3600 seconds", TEXT, re.I)
+def test_execute_timeout_is_capped_at_120():
+    assert re.search(r"never pass .?execute.? a timeout above 120 seconds", TEXT, re.I)
 
 
 def test_cli_sets_playwright_default_timeout():
@@ -28,3 +28,7 @@ def test_uses_browser_cli():
 
 def test_treats_page_content_as_untrusted():
     assert re.search(r"untrusted", TEXT, re.I)
+
+
+def test_points_to_page_details_skill():
+    assert "`page-details` skill" in TEXT
