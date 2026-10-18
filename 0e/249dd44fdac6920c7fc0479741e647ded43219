@@ -1,0 +1,40 @@
+AGENTS.md
+  s_6f8b5f02d80ab5::t_6176f268c21557 20-21,50-53
+README.md
+  s_6f8b5f02d80ab5::t_7201f3bd514ccc 18-19,37-56,72-74,94-95
+evals/login-no-leak/Task.md
+  s_6f8b5f02d80ab5::t_1f658117b84cc2 1,5,7-9
+evals/login-no-leak/tests/verify.py
+  s_6f8b5f02d80ab5::t_dc259d23784674 1,24
+instructions.md
+  s_6f8b5f02d80ab5::t_38c5590fead3e1 5,12-13,37-39,43-61,73
+sandbox/setup.sh
+  s_6f8b5f02d80ab5::t_e0f9317f2cf744 28-29,31-32,35
+sandbox/workspace/browser_cli.py
+  s_6f8b5f02d80ab5::t_0098ef1b567717 2,8,106-108
+tests/test_evals.py
+  s_6f8b5f02d80ab5::t_c3524064e6e99d 19,25,45,48-52
+tests/test_instructions.py
+  s_6f8b5f02d80ab5::t_dd9fd8c4beea8b 13-16,19-26
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "0e249dd44fdac6920c7fc0479741e647ded43219",
+  "prompts": {},
+  "humans": {
+    "h_0615fc48a2f10f": {
+      "author": "Avtar <118772076+avtarraikmo@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_6f8b5f02d80ab5": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cedb48ad-abc8-49d4-9dc2-b0d9cc499006",
+        "model": "unknown"
+      },
+      "human_author": "Avtar <118772076+avtarraikmo@users.noreply.github.com>"
+    }
+  }
+}
