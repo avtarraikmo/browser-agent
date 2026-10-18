@@ -38,7 +38,7 @@ Chromium is launched once with a CDP port and stays alive between `execute` call
 each call attaches over CDP on localhost, does one action, and disconnects.
 Cookies, tabs and page state persist; the profile dir survives Chrome restarts.
 
-Usage:  browser_cli.py goto URL | snap | text | click SEL | type SEL TEXT [--enter]
+Usage:  browser_cli.py goto URL [--text] | page | snap | text | click SEL | type SEL TEXT [--enter]
                 | press KEY | shot [PATH] | tabs | restart | stop
 Env:    BROWSE_PROFILE (default /agent_tools/.browse-profile), BROWSE_PORT (default 9222)
 Needs:  playwright + chromium already installed in the sandbox.
@@ -78,10 +78,10 @@ def launch_chrome(pw) -> None:
         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
         start_new_session=True,  # survive after this command exits
     )
-    for _ in range(40):
+    for _ in range(200):  # 10s total, polled every 50ms
         if cdp_up():
             return
-        time.sleep(0.25)
+        time.sleep(0.05)
     sys.exit(json.dumps({"error": "ChromeStartFailed"}))
 
 
@@ -109,6 +109,17 @@ def snap(page) -> str:
     return json.dumps({"url": page.url, "title": page.title(), "snapshot": tree[:MAX_OUT]})
 
 
+def page_info(page) -> str:
+    """URL, title, snapshot, body text and open tabs in one call (read-only)."""
+    return json.dumps({
+        "url": page.url,
+        "title": page.title(),
+        "snapshot": page.locator("body").aria_snapshot()[:MAX_OUT],
+        "text": page.inner_text("body")[:MAX_OUT],
+        "tabs": [{"url": pg.url, "title": pg.title()} for pg in page.context.pages],
+    })
+
+
 def run(a) -> str:
     with sync_playwright() as pw:  # exiting disconnects; Chrome keeps running
         if a.cmd == "restart":
@@ -122,7 +133,9 @@ def run(a) -> str:
         p = get_page(pw)
         if a.cmd == "goto":
             p.goto(a.url, wait_until="domcontentloaded")
-            return snap(p)
+            return page_info(p) if a.with_text else snap(p)
+        if a.cmd == "page":
+            return page_info(p)
         if a.cmd == "snap":
             return snap(p)
         if a.cmd == "text":
@@ -153,9 +166,9 @@ def run(a) -> str:
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
-    for name in ("snap", "text", "tabs", "restart", "stop"):
+    for name in ("snap", "text", "tabs", "page", "restart", "stop"):
         sub.add_parser(name)
-    s = sub.add_parser("goto"); s.add_argument("url")
+    s = sub.add_parser("goto"); s.add_argument("url"); s.add_argument("--text", dest="with_text", action="store_true")
     s = sub.add_parser("click"); s.add_argument("selector")
     s = sub.add_parser("type"); s.add_argument("selector"); s.add_argument("text"); s.add_argument("--enter", action="store_true")
     s = sub.add_parser("press"); s.add_argument("key")
@@ -175,3 +188,17 @@ chmod a+rx /agent_tools/browser_cli.py
 
 # Fail the bake now if the script or Playwright import is broken.
 python3 /agent_tools/browser_cli.py --help >/dev/null
+
+# Best-effort warm-up: launch Chromium once against the CLI's profile dir so the
+# first-run profile setup is baked into the snapshot and threads skip it. Only
+# about:blank is loaded, so no page state is saved. Stop it and clear lock files so
+# a clone starts clean; a failure here must not block the bake.
+if timeout 60 python3 /agent_tools/browser_cli.py snap >/dev/null 2>&1; then
+  python3 /agent_tools/browser_cli.py stop >/dev/null 2>&1 || true
+  rm -f /agent_tools/.browse-profile/Singleton*
+  echo "browser warm-up ok"
+else
+  pkill -f remote-debugging-port=9222 >/dev/null 2>&1 || true
+  rm -f /agent_tools/.browse-profile/Singleton*
+  echo "browser warm-up skipped (launch failed)"
+fi

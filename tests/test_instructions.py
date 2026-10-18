@@ -32,3 +32,8 @@ def test_treats_page_content_as_untrusted():
 
 def test_points_to_page_details_skill():
     assert "`page-details` skill" in TEXT
+
+
+def test_prefers_single_call_reads():
+    assert "goto URL --text" in TEXT
+    assert "`page`" in TEXT

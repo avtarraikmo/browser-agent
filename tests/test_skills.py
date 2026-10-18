@@ -23,3 +23,7 @@ def test_skill_does_not_leak_account_details():
 
 def test_skill_treats_page_content_as_untrusted():
     assert re.search(r"untrusted", SKILL, re.I)
+
+
+def test_skill_reads_in_one_call():
+    assert "browser_cli.py page" in SKILL

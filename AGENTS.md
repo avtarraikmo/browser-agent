@@ -15,7 +15,7 @@ prompt is `instructions.md`.
 | --- | --- |
 | `agent.py` | `define_deep_agent(name=..., model=...)` with no custom tools; installs trace redaction. `name` is the deploy id. |
 | `instructions.md` | Always-loaded system prompt: browsing recipe, safety rules. |
-| `skills/page-details/SKILL.md` | Read-only skill: reports the current page URL, login state, summary and available tabs/buttons. Uses only `snap`/`text`/`tabs`. |
+| `skills/page-details/SKILL.md` | Read-only skill: reports the current page URL, login state, summary and available tabs/buttons. Uses only the read-only `page`/`snap`/`text`/`tabs` commands. |
 | `identity.py` | Managed auth (`auth.langsmith_api_key()`); callers own their threads. |
 | `sandbox/__init__.py` | Managed sandbox: network deny list. |
 | `sandbox/setup.sh` | Bakes Playwright + Chromium into the sandbox snapshot and writes an embedded copy of `sandbox/agent_tools/browser_cli.py` to `/agent_tools` (`mda` uploads only this script, so siblings aren't available). |
@@ -51,7 +51,7 @@ handle to the sandbox, so don't add tools that expect one and don't use the priv
 
 `skills/<name>/SKILL.md` files are discovered automatically for static agents and
 synced to Context Hub on deploy; `agent.py` needs no wiring. `page-details` is read-only
-(`snap`/`text`/`tabs` only, no clicks or navigation) and `instructions.md` tells the model
+(read-only `page`/`snap`/`text`/`tabs`, no clicks or navigation) and `instructions.md` tells the model
 when to use it. Keep skills inside the security invariants below.
 
 ### Security invariants (do not weaken)

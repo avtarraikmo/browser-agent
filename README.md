@@ -42,7 +42,7 @@ flowchart LR
     User([User / caller]) -->|thread_id + message| Agent["Deep agent<br/>agent.py + instructions.md<br/>skills/page-details"]
     Agent -->|"execute tool<br/>thread:&lt;thread_id&gt;"| Sandbox
     subgraph Sandbox["Managed sandbox (one per thread, network deny list)"]
-        CLI["/agent_tools/browser_cli.py<br/>goto · snap · text · click · type · press · shot"]
+        CLI["/agent_tools/browser_cli.py<br/>goto · page · snap · text · click · type · press · shot"]
         PW[Playwright]
         Chrome[("Headless Chromium<br/>CDP :9222, persistent profile")]
         CLI -->|connect_over_cdp| PW --> Chrome
@@ -57,7 +57,7 @@ long-lived Chromium over CDP through Playwright, does one action and returns JSO
 
 The `page-details` skill (`skills/page-details/SKILL.md`) is discovered automatically and
 referenced from `instructions.md`. It reports the current URL, login state, a short summary
-and the tabs, buttons and forms available, using only `snap`, `text` and `tabs`.
+and the tabs, buttons and forms available, using one read-only `page` call.
 
 ## How the browser works
 

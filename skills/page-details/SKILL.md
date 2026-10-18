@@ -6,17 +6,16 @@ description: Report details about the page the browser is currently on: its URL,
 # Page details
 
 Describe the page the browser is on right now. This skill is **read-only**: use only
-`snap`, `text` and `tabs`. Never `click`, `type`, `press` or `goto` while using it, and
+`page`, `snap`, `text` and `tabs`. Never `click`, `type`, `press` or `goto` while using it, and
 never follow a link, even to check where it goes.
 
 ## Steps
 
-1. Run `python3 /agent_tools/browser_cli.py snap` to get the current URL, title and
-   accessibility snapshot. If the thread hasn't opened a page yet, say so and stop;
-   don't pick a URL yourself.
-2. If the snapshot is too thin to summarize, run `text` once for the body text.
-3. Run `tabs` to list open tabs (these are browser tabs, not page navigation tabs).
-4. Reply in the format below.
+1. Run `python3 /agent_tools/browser_cli.py page` once. It returns the current URL,
+   title, accessibility snapshot, visible text and open browser tabs in one call. If
+   the thread hasn't opened a page yet, say so and stop; don't pick a URL yourself.
+2. Use `tabs` from that output for the open browser tabs (not page navigation tabs).
+3. Reply in the format below.
 
 ## Reply format
 
