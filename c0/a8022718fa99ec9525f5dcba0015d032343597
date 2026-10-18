@@ -1,0 +1,36 @@
+sandbox/agent_tools/browser_cli.py
+  h_0615fc48a2f10f 1-139
+AGENTS.md
+  s_10fd97e2a70a05::t_7a2433c3c5f2a0 20-21
+README.md
+  s_10fd97e2a70a05::t_0419e0b7332e79 18-19,44
+docs/architecture.html
+  s_10fd97e2a70a05::t_fc30b7848c1c1e 107,191,197,205
+instructions.md
+  s_10fd97e2a70a05::t_423da3161fa35c 12,24,72
+sandbox/setup.sh
+  s_10fd97e2a70a05::t_74c692533635ea 29-32,35
+tests/test_instructions.py
+  s_10fd97e2a70a05::t_b69c5c11636b72 15,25
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c0a8022718fa99ec9525f5dcba0015d032343597",
+  "prompts": {},
+  "humans": {
+    "h_0615fc48a2f10f": {
+      "author": "Avtar <118772076+avtarraikmo@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_10fd97e2a70a05": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "049190ac-a26c-475a-ba65-9f84a05f0e8f",
+        "model": "unknown"
+      },
+      "human_author": "Avtar <118772076+avtarraikmo@users.noreply.github.com>"
+    }
+  }
+}
