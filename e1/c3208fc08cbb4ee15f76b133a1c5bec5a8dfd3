@@ -1,0 +1,24 @@
+docs/architecture.html
+  s_b8cd9d71fe3a86::t_34a1cf785d2cf5 197
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "e1c3208fc08cbb4ee15f76b133a1c5bec5a8dfd3",
+  "prompts": {},
+  "humans": {
+    "h_0615fc48a2f10f": {
+      "author": "Avtar <118772076+avtarraikmo@users.noreply.github.com>"
+    }
+  },
+  "sessions": {
+    "s_b8cd9d71fe3a86": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "25bfad86-2b7f-4186-a36a-1ae5de790b5f",
+        "model": "unknown"
+      },
+      "human_author": "Avtar <118772076+avtarraikmo@users.noreply.github.com>"
+    }
+  }
+}
