@@ -1,0 +1,199 @@
+.gitignore
+  s_00ec8fb9a9f19a::t_d1994e27119bc5 1-177
+.vscode/launch.json
+  s_00ec8fb9a9f19a::t_b1b07fd8094399 1-12
+.vscode/settings.json
+  s_dbb440c8b1bf96::t_a9f647a164c4ff 1-10
+AGENTS.md
+  s_b8cd9d71fe3a86::t_d535c6f791ed08 1-126
+README.md
+  s_b8cd9d71fe3a86::t_27c01844df6593 1-244
+README_CONVERT_MDA_TO_DEEPAGENT.md
+  s_b8cd9d71fe3a86::t_198fe44834d668 1-142
+agent.py
+  s_00ec8fb9a9f19a::t_39e08b8307eac5 1-12
+docs/architecture.html
+  s_b8cd9d71fe3a86::t_853b63ffbad878 1-245
+env.example
+  s_00ec8fb9a9f19a::t_44bdb7d3aaedc1 1-30
+evals/example-domain-heading-link/Task.md
+  s_10fd97e2a70a05::t_3cc46a1e8bb0a1 1-11
+evals/example-domain-heading-link/environment/Dockerfile
+  s_dbb440c8b1bf96::t_ba9545155bb3e6 1-3
+evals/example-domain-heading-link/instruction.md
+  s_dbb440c8b1bf96::t_e32bb331af1f4d 1-2
+evals/example-domain-heading-link/task.toml
+  s_dbb440c8b1bf96::t_0f18309c807988 1-15
+evals/example-domain-heading-link/tests/test.sh
+  s_dbb440c8b1bf96::t_33225a7368850e 1-4
+evals/example-domain-heading-link/tests/verify.py
+  s_dbb440c8b1bf96::t_e222ff6182e733 1-27
+evals/harbor-job.json
+  s_dbb440c8b1bf96::t_34decab902aa82 1-63
+evals/login-no-leak/Task.md
+  s_6f8b5f02d80ab5::t_9e5d3e20e6d162 1-10
+evals/login-no-leak/environment/Dockerfile
+  s_dbb440c8b1bf96::t_969a175bb79539 1-3
+evals/login-no-leak/instruction.md
+  s_6f8b5f02d80ab5::t_ba6c9dbb38351c 1-2
+evals/login-no-leak/task.toml
+  s_dbb440c8b1bf96::t_e4a8ce4f453ef0 1-15
+evals/login-no-leak/tests/test.sh
+  s_dbb440c8b1bf96::t_2d406164b87090 1-4
+evals/login-no-leak/tests/verify.py
+  s_6f8b5f02d80ab5::t_85901a00cb9215 1-39
+evals/no-credentials-no-typing/Task.md
+  s_10fd97e2a70a05::t_d2028c3d5d1770 1-10
+evals/no-credentials-no-typing/environment/Dockerfile
+  s_10fd97e2a70a05::t_71e709a5047536 1-3
+evals/no-credentials-no-typing/instruction.md
+  s_10fd97e2a70a05::t_0920c26ffe9113 1
+evals/no-credentials-no-typing/task.toml
+  s_10fd97e2a70a05::t_b0ad920d302d48 1-15
+evals/no-credentials-no-typing/tests/test.sh
+  s_10fd97e2a70a05::t_076fe0ae80d5bb 1-4
+evals/no-credentials-no-typing/tests/verify.py
+  s_10fd97e2a70a05::t_266ef4daf71a67 1-52
+evals/no-link-following/Task.md
+  s_10fd97e2a70a05::t_9db649828e0a34 1-10
+evals/no-link-following/environment/Dockerfile
+  s_10fd97e2a70a05::t_b1cb2f777a879e 1-3
+evals/no-link-following/instruction.md
+  s_10fd97e2a70a05::t_b45583e1db28ed 1
+evals/no-link-following/task.toml
+  s_10fd97e2a70a05::t_a8081e7a727fa6 1-15
+evals/no-link-following/tests/test.sh
+  s_10fd97e2a70a05::t_e77582373a925c 1-4
+evals/no-link-following/tests/verify.py
+  s_10fd97e2a70a05::t_22c91f9d30f515 1-59
+evals/page-details-format/Task.md
+  s_10fd97e2a70a05::t_0216ce10281a9c 1-10
+evals/page-details-format/environment/Dockerfile
+  s_10fd97e2a70a05::t_d4be46c63598e6 1-3
+evals/page-details-format/instruction.md
+  s_10fd97e2a70a05::t_50ac0e4765ea34 1
+evals/page-details-format/task.toml
+  s_10fd97e2a70a05::t_fe24ed9c1b0219 1-15
+evals/page-details-format/tests/test.sh
+  s_10fd97e2a70a05::t_e33140d4d945c8 1-4
+evals/page-details-format/tests/verify.py
+  s_10fd97e2a70a05::t_4a89f62cf09c56 1-55
+evals/prompt-injection-data-url/Task.md
+  s_10fd97e2a70a05::t_0f9df5dac9e39f 1-10
+evals/prompt-injection-data-url/environment/Dockerfile
+  s_10fd97e2a70a05::t_d46964b262e830 1-3
+evals/prompt-injection-data-url/instruction.md
+  s_10fd97e2a70a05::t_1437493a54810f 1
+evals/prompt-injection-data-url/task.toml
+  s_10fd97e2a70a05::t_82b6a3483ab78f 1-15
+evals/prompt-injection-data-url/tests/test.sh
+  s_10fd97e2a70a05::t_fc3280148a7ba9 1-4
+evals/prompt-injection-data-url/tests/verify.py
+  s_10fd97e2a70a05::t_9f57a752074116 1-50
+evals/refuse-private-address/Task.md
+  s_10fd97e2a70a05::t_7a48a9d11003ac 1-10
+evals/refuse-private-address/environment/Dockerfile
+  s_10fd97e2a70a05::t_80e491136d8e54 1-3
+evals/refuse-private-address/instruction.md
+  s_10fd97e2a70a05::t_f0c3160a4a680a 1
+evals/refuse-private-address/task.toml
+  s_10fd97e2a70a05::t_8ea7d8cadfdc6e 1-15
+evals/refuse-private-address/tests/test.sh
+  s_10fd97e2a70a05::t_5228573f56b5ca 1-4
+evals/refuse-private-address/tests/verify.py
+  s_10fd97e2a70a05::t_8215ba0fedc562 1-57
+evals/unreachable-honesty/Task.md
+  s_10fd97e2a70a05::t_2d3f2efce79934 1-10
+evals/unreachable-honesty/environment/Dockerfile
+  s_10fd97e2a70a05::t_ce898d2243e716 1-3
+evals/unreachable-honesty/instruction.md
+  s_10fd97e2a70a05::t_26aaca0956f17c 1
+evals/unreachable-honesty/task.toml
+  s_10fd97e2a70a05::t_5a6684d8f28c10 1-15
+evals/unreachable-honesty/tests/test.sh
+  s_10fd97e2a70a05::t_01b09a68e57aac 1-4
+evals/unreachable-honesty/tests/verify.py
+  s_10fd97e2a70a05::t_24655257d66f56 1-56
+identity.py
+  s_00ec8fb9a9f19a::t_bd7f6bc823ebc5 1-10
+instructions.md
+  s_10fd97e2a70a05::t_45cc1d32badf2f 1-94
+pyproject.toml
+  s_dbb440c8b1bf96::t_b411f15fb09720 1-22
+sandbox/__init__.py
+  s_10fd97e2a70a05::t_3826f1bb613de0 1-39
+sandbox/agent_tools/browser_cli.py
+  s_b8cd9d71fe3a86::t_04306c4da7dadf 1-152
+sandbox/setup.sh
+  s_b8cd9d71fe3a86::t_05e1686e849d13 1-206
+scripts/embed_cli.py
+  s_b8cd9d71fe3a86::t_b8706b3321445a 1-48
+skills/page-details/SKILL.md
+  s_10fd97e2a70a05::t_da5b641bc5e610 1-64
+tests/conftest.py
+  s_dbb440c8b1bf96::t_e14cc1821b808b 1-5
+tests/test_evals.py
+  s_10fd97e2a70a05::t_bb960c27641fac 1-119
+tests/test_instructions.py
+  s_b8cd9d71fe3a86::t_2cb31196fa0fb7 1-49
+tests/test_sandbox.py
+  s_10fd97e2a70a05::t_dd0b5c9daad19a 1-58
+tests/test_setup.py
+  s_b8cd9d71fe3a86::t_5ddf681196d902 1-30
+tests/test_skills.py
+  s_10fd97e2a70a05::t_12a8533ae6b72b 1-38
+tests/test_tracing.py
+  s_dbb440c8b1bf96::t_f9e7b9eed98e40 1-91
+tools/tracing.py
+  s_00ec8fb9a9f19a::t_08b6844278dd5e 1-42
+uv.lock
+  s_dbb440c8b1bf96::t_cedcc3b15eeed4 1-2071
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "4f9cd22ff129cec1535b3e5d8aafe8667b2d5789",
+  "prompts": {},
+  "sessions": {
+    "s_00ec8fb9a9f19a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "bf3f99c1-bc50-4551-89bd-cabef109adfd",
+        "model": "unknown"
+      },
+      "human_author": "Avtar <118772076+avtarraikmo@users.noreply.github.com>"
+    },
+    "s_10fd97e2a70a05": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "049190ac-a26c-475a-ba65-9f84a05f0e8f",
+        "model": "unknown"
+      },
+      "human_author": "Avtar <118772076+avtarraikmo@users.noreply.github.com>"
+    },
+    "s_6f8b5f02d80ab5": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cedb48ad-abc8-49d4-9dc2-b0d9cc499006",
+        "model": "unknown"
+      },
+      "human_author": "Avtar <118772076+avtarraikmo@users.noreply.github.com>"
+    },
+    "s_b8cd9d71fe3a86": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "25bfad86-2b7f-4186-a36a-1ae5de790b5f",
+        "model": "unknown"
+      },
+      "human_author": "Avtar <118772076+avtarraikmo@users.noreply.github.com>"
+    },
+    "s_dbb440c8b1bf96": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "0c41ffc1-cee4-4966-bad2-5c9f27e7ca0c",
+        "model": "unknown"
+      },
+      "human_author": "Avtar <118772076+avtarraikmo@users.noreply.github.com>"
+    }
+  }
+}
